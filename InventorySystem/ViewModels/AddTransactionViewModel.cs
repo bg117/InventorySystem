@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Xml.Linq;
 using InventorySystem.Common;
 using InventorySystem.Models;
 
@@ -31,7 +25,7 @@ namespace InventorySystem.ViewModels
         private DateTime? _transactionDate;
         public DateTime TransactionDate
         {
-            get => (DateTime)(_transactionDate ??= DateTime.Now);
+            get => _transactionDate ??= DateTime.Now;
             set => SetField(ref _transactionDate, value);
         }
 

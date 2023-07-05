@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 using InventorySystem.Common;
@@ -76,6 +74,12 @@ namespace InventorySystem.ViewModels
                 ? TransactionsSingletonInstance.Transactions
                 : TransactionsSingletonInstance.Transactions.Where(t => t.Item.Name.IndexOf(NameFilter, StringComparison.OrdinalIgnoreCase) >= 0);
             FilteredTransactions = new ObservableCollectionWithItemNotify<Transaction>(filtered);
+        });
+
+        private ICommand _copyIdCommand;
+        public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(o =>
+        {
+            Clipboard.SetText(string.Join("\n", SelectedTransactions.Select(t => t.Id.ToString())));
         });
     }
 }

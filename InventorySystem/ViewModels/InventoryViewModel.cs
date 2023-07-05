@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Util;
+using System.Windows;
 using System.Windows.Input;
 
 using InventorySystem.Common;
@@ -41,5 +37,11 @@ namespace InventorySystem.ViewModels
             },
             o => SelectedItems != null && SelectedItems.Any()
         );
+
+        private ICommand _copyIdCommand;
+        public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(o =>
+        {
+            Clipboard.SetText(string.Join("\n", SelectedItems.Select(t => t.Id.ToString())));
+        });
     }
 }
