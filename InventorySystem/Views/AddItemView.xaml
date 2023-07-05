@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="InventorySystem.Views.EditItemView"
+﻿<mah:MetroWindow x:Class="InventorySystem.Views.AddItemView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -11,10 +11,10 @@
              d:DesignHeight="450" d:DesignWidth="800"
              Height="Auto" Width="372" Title="Add item" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <mah:MetroWindow.DataContext>
-        <viewModels:EditItemViewModel/>
+        <viewModels:AddItemViewModel/>
     </mah:MetroWindow.DataContext>
     <StackPanel Orientation="Vertical" Margin="8">
-        <mah:MetroHeader Header="Edit item properties" mah:HeaderedControlHelper.HeaderFontSize="24" mah:HeaderedControlHelper.HeaderVerticalContentAlignment="Top" mah:HeaderedControlHelper.HeaderMargin="0 0 0 8"/>
+        <mah:MetroHeader Header="Add new item" mah:HeaderedControlHelper.HeaderFontSize="24" mah:HeaderedControlHelper.HeaderVerticalContentAlignment="Top" mah:HeaderedControlHelper.HeaderMargin="0 0 0 8"/>
         <Grid Margin="0 0 0 4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -27,18 +27,18 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0">Name</Label>
-            <TextBox Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"/>
+            <TextBox x:Name="ItemName" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"/>
             <Label Grid.Row="1" Grid.Column="0">Description</Label>
-            <TextBox Text="{Binding Description,Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+            <TextBox x:Name="ItemDescription" Text="{Binding Description,Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
             <Label Grid.Row="2" Grid.Column="0">Quantity</Label>
-            <mah:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Quantity,Mode=TwoWay}" Minimum="1"/>
+            <mah:NumericUpDown x:Name="ItemQty" Grid.Row="2" Grid.Column="1" Value="{Binding Quantity,Mode=TwoWay}" Minimum="1"/>
             <Label Grid.Row="3" Grid.Column="0">Price</Label>
-            <mah:NumericUpDown DecimalPointCorrection="Currency" Grid.Row="3" Grid.Column="1" Value="{Binding Price,Mode=TwoWay}" Minimum="0"/>
+            <mah:NumericUpDown x:Name="ItemPrice" DecimalPointCorrection="Currency" Grid.Row="3" Grid.Column="1" Value="{Binding Price,Mode=TwoWay}" Minimum="0"/>
         </Grid>
-        <Button Command="{Binding UpdateItemCommand}">
+        <Button Command="{Binding AddItemCommand}">
             <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconMaterial Kind="Update"/>
-                <TextBlock Margin="4 0">Update item</TextBlock>
+                <iconPacks:PackIconMaterial Kind="Plus"/>
+                <TextBlock Margin="4 0">Add item</TextBlock>
             </StackPanel>
         </Button>
     </StackPanel>

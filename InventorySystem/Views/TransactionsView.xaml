@@ -7,14 +7,23 @@
              xmlns:local="clr-namespace:InventorySystem.Views"
              xmlns:viewmodels="clr-namespace:InventorySystem.ViewModels"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:converters="clr-namespace:InventorySystem.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <viewmodels:TransactionsViewModel/>
     </UserControl.DataContext>
-    <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
-            <Button Margin="0 0 4 0">
+    <UserControl.Resources>
+        <converters:ItemToProductNameConverter x:Key="ItemToProductNameConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 8">
+            <Button Margin="0 0 4 0" Click="AddTransaction_OnClick">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Plus"/>
                     <TextBlock Margin="4 0">Add transaction</TextBlock>
@@ -27,33 +36,34 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Grid.Row="1" Orientation="Vertical">
             <StackPanel Orientation="Horizontal" Margin="0 0 0 4">
-                <TextBox mah:TextBoxHelper.Watermark="Search by ID" Margin="0 0 4 0" Width="248"/>
-                <Button>
+                <TextBox mah:TextBoxHelper.Watermark="Search by ID" Text="{Binding IdFilter,Mode=TwoWay}" Margin="0 0 4 0" Width="248"/>
+                <Button Command="{Binding SearchIdCommand}">
                     <iconPacks:PackIconMaterial Kind="Magnify"/>
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal"  Margin="0 0 0 4">
-                <TextBox mah:TextBoxHelper.Watermark="Filter by item name" Margin="0 0 4 0" Width="248"/>
-                <Button>
+                <TextBox mah:TextBoxHelper.Watermark="Filter by item name" Text="{Binding NameFilter,Mode=TwoWay}"  Margin="0 0 4 0" Width="248"/>
+                <Button Command="{Binding FilterNameCommand}">
                     <iconPacks:PackIconMaterial Kind="Magnify"/>
                 </Button>
             </StackPanel>
         </StackPanel>
-        <ListView x:Name="TransactionsListView" ItemsSource="{Binding Transactions}" SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">
+        <ListView Grid.Row="2" x:Name="TransactionsListView" ItemsSource="{Binding FilteredTransactions}" SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
                         <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}"/>
                         <GridViewColumn Header="Transaction Date" DisplayMemberBinding="{Binding Date}"/>
-                        <GridViewColumn Header="Item Name" DisplayMemberBinding="{Binding ItemName}"/>
+                        <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Item,Converter={StaticResource ItemToProductNameConverter}}"/>
                         <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}"/>
                         <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"/>
-                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding TotalPrice}"/>
+                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding TotalPrice,StringFormat='₱#.00'}"/>
+                        <GridViewColumn Header="Notes" DisplayMemberBinding="{Binding Notes}"/>
                     </GridView.Columns>
                 </GridView>
             </ListView.View>
         </ListView>
-    </StackPanel>
+    </Grid>
 </UserControl>

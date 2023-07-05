@@ -9,18 +9,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <mah:MetroAnimatedTabControl>
-            <mah:MetroTabItem Header="transactions">
-                <Border Padding="8">
-                    <local:TransactionsView/>
-                </Border>
+            <mah:MetroTabItem Header="Transactions">
+                <local:TransactionsView Margin="8"/>
             </mah:MetroTabItem>
-            <mah:MetroTabItem Header="inventory">
-                <Border Padding="8">
-                    <local:InventoryView/>
-                </Border>
-            </mah:MetroTabItem>
-            <mah:MetroTabItem Header="users">
-                <Border Padding="8"></Border>
+            <mah:MetroTabItem Header="Inventory">
+                <local:InventoryView Margin="8"/>
             </mah:MetroTabItem>
         </mah:MetroAnimatedTabControl>
     </Grid>

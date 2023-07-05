@@ -10,26 +10,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using InventorySystem.Models;
+using InventorySystem.ViewModels;
 using MahApps.Metro.Controls;
 
-namespace InventorySystem
+namespace InventorySystem.Views
 {
     /// <summary>
-    /// Interaction logic for EditItemWindow.xaml
+    /// Interaction logic for AddItemView.xaml
     /// </summary>
-    public partial class EditItemWindow : MetroWindow
+    public partial class AddTransactionView
     {
-        public EditItemWindow()
+        public AddTransactionView()
         {
             InitializeComponent();
-        }
-
-        public EditItemWindow(ref Item item)
-        {
-            InitializeComponent();
-            DataContext = item;
         }
     }
 }

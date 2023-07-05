@@ -21,16 +21,11 @@ namespace InventorySystem.Views
     /// <summary>
     /// Interaction logic for AddItemView.xaml
     /// </summary>
-    public partial class EditItemView
+    public partial class AddItemView
     {
-        public EditItemView()
+        public AddItemView()
         {
             InitializeComponent();
-        }
-
-        public EditItemView(Item item) : this()
-        {
-            ((EditItemViewModel)DataContext).Item = item;
         }
     }
 }

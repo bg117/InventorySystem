@@ -29,10 +29,15 @@ namespace InventorySystem.Views
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!(DataContext is TransactionsViewModel viewModel))
+            if (DataContext is not TransactionsViewModel viewModel)
                 return;
 
             viewModel.SelectedTransactions = TransactionsListView.SelectedItems.Cast<Transaction>().ToList();
+        }
+
+        private void AddTransaction_OnClick(object sender, RoutedEventArgs e)
+        {
+            new AddTransactionView().Show();
         }
     }
 }

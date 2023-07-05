@@ -8,5 +8,21 @@
         xmlns:views="clr-namespace:InventorySystem.Views"
         mc:Ignorable="d"
         Title="Inventory System" Height="450" Width="800">
-    <views:MainView/>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem.Items>
+                    <MenuItem Header="Import...">
+                        <MenuItem.Items>
+                            <MenuItem Header="Excel (.xlsx)"/>
+                            <MenuItem Header="Access (.accdb)"/>
+                        </MenuItem.Items>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Exit" InputGestureText="Alt+F4"/>
+                </MenuItem.Items>
+            </MenuItem>
+        </Menu>
+        <views:MainView/>
+    </DockPanel>
 </mah:MetroWindow>

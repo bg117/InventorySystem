@@ -11,16 +11,32 @@
     <UserControl.DataContext>
         <viewmodels:InventoryViewModel/>
     </UserControl.DataContext>
-    <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal" Margin="0 0 0 8">
-            <Button Command="{Binding EditItemsCommand}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 8">
+            <Button Click="AddItem_OnClick" Margin="0 0 4 0">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Plus"/>
+                    <TextBlock Margin="4 0">Add item</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button IsEnabled="{Binding HasSelected}" Click="EditSelected_OnClick" Margin="0 0 4 0">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Pencil"/>
-                    <TextBlock Margin="4 0">Edit item</TextBlock>
+                    <TextBlock Margin="4 0">Edit selected</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding RemoveSelectedCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="TrashCan"/>
+                    <TextBlock Margin="4 0">Remove selected</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>
-        <ListView x:Name="InventoryListView" ItemsSource="{Binding Items}" SelectionMode="Extended" SelectionChanged="InventoryListView_OnSelectionChanged">
+        <ListView Grid.Row="1" x:Name="InventoryListView" ItemsSource="{Binding InventorySingletonInstance.Items}" SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
@@ -28,10 +44,10 @@
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
                         <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"/>
                         <GridViewColumn Header="Stock" DisplayMemberBinding="{Binding Quantity}"/>
-                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}"/>
+                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price,StringFormat='₱#.00'}"/>
                     </GridView.Columns>
                 </GridView>
             </ListView.View>
         </ListView>
-    </StackPanel>
+    </Grid>
 </UserControl>
