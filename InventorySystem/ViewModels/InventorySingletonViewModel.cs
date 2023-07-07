@@ -1,14 +1,13 @@
 ﻿using InventorySystem.Common;
 using InventorySystem.Models;
 
-namespace InventorySystem.ViewModels
+namespace InventorySystem.ViewModels;
+
+public sealed class InventorySingletonViewModel : ObservableObject
 {
-    public class InventorySingletonViewModel : ObservableObject
-    {
-        public ObservableCollectionWithItemNotify<Item> Items { get; } = new ObservableCollectionWithItemNotify<Item>();
+    public ObservableCollectionWithItemNotify<Item> Items { get; } = new();
 
-        private InventorySingletonViewModel() {}
+    private InventorySingletonViewModel() {}
 
-        public static InventorySingletonViewModel Instance { get; } = new InventorySingletonViewModel();
-    }
+    public static InventorySingletonViewModel Instance { get; } = new();
 }

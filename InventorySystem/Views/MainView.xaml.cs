@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace InventorySystem.Views
+namespace InventorySystem.Views;
+
+/// <summary>
+/// Interaction logic for MainView.xaml
+/// </summary>
+public partial class MainView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for MainView.xaml
-    /// </summary>
-    public partial class MainView : UserControl
+    public MainView()
     {
-        public MainView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

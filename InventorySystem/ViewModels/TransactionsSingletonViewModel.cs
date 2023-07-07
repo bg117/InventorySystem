@@ -1,15 +1,14 @@
 ﻿using InventorySystem.Common;
 using InventorySystem.Models;
 
-namespace InventorySystem.ViewModels
+namespace InventorySystem.ViewModels;
+
+public sealed class TransactionsSingletonViewModel : ObservableObject
 {
-    public class TransactionsSingletonViewModel : ObservableObject
-    {
-        public ObservableCollectionWithItemNotify<Transaction> Transactions { get; } = new ObservableCollectionWithItemNotify<Transaction>();
+    public ObservableCollectionWithItemNotify<Transaction> Transactions { get; } = new();
 
-        private TransactionsSingletonViewModel()
-        {}
+    private TransactionsSingletonViewModel()
+    {}
 
-        public static TransactionsSingletonViewModel Instance { get; } = new TransactionsSingletonViewModel();
-    }
+    public static TransactionsSingletonViewModel Instance { get; } = new();
 }

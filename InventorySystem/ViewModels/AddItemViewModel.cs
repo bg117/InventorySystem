@@ -2,53 +2,52 @@
 using InventorySystem.Common;
 using InventorySystem.Models;
 
-namespace InventorySystem.ViewModels
+namespace InventorySystem.ViewModels;
+
+public class AddItemViewModel : ObservableObject
 {
-    public class AddItemViewModel : ObservableObject
+    public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;
+
+    private string _name;
+    public string Name
     {
-        public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;
-
-        private string _name;
-        public string Name
-        {
-            get => _name;
-            set => SetField(ref _name, value);
-        }
-
-        private string _description;
-        public string Description
-        {
-            get => _description;
-            set => SetField(ref _description, value);
-        }
-
-        private int _quantity = 1;
-        public int Quantity
-        {
-            get => _quantity;
-            set => SetField(ref _quantity, value);
-        }
-
-        private decimal _price;
-        public decimal Price
-        {
-            get => _price;
-            set => SetField(ref _price, value);
-        }
-
-        private ICommand _addItemCommand;
-
-        public ICommand AddItemCommand => _addItemCommand ??= new RelayCommand(o =>
-        {
-            var item = new Item
-            {
-                Id = Item.NewId(),
-                Name = Name,
-                Description = Description,
-                Quantity = Quantity,
-                Price = Price
-            };
-            InventorySingletonInstance.Items.Add(item);
-        }, o => !string.IsNullOrWhiteSpace(Name));
+        get => _name;
+        set => SetField(ref _name, value);
     }
+
+    private string _description;
+    public string Description
+    {
+        get => _description;
+        set => SetField(ref _description, value);
+    }
+
+    private int _quantity = 1;
+    public int Quantity
+    {
+        get => _quantity;
+        set => SetField(ref _quantity, value);
+    }
+
+    private decimal _price;
+    public decimal Price
+    {
+        get => _price;
+        set => SetField(ref _price, value);
+    }
+
+    private ICommand _addItemCommand;
+
+    public ICommand AddItemCommand => _addItemCommand ??= new RelayCommand(_ =>
+    {
+        var item = new Item
+        {
+            Id = Item.NewId(),
+            Name = Name,
+            Description = Description,
+            Quantity = Quantity,
+            Price = Price
+        };
+        InventorySingletonInstance.Items.Add(item);
+    }, _ => !string.IsNullOrWhiteSpace(Name));
 }

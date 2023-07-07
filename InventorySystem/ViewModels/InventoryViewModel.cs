@@ -6,42 +6,41 @@ using System.Windows.Input;
 using InventorySystem.Common;
 using InventorySystem.Models;
 
-namespace InventorySystem.ViewModels
+namespace InventorySystem.ViewModels;
+
+public class InventoryViewModel : ObservableObject
 {
-    public class InventoryViewModel : ObservableObject
+    public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;
+
+    private IEnumerable<Item> _selectedItems;
+    public IEnumerable<Item> SelectedItems
     {
-        public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;
-
-        private IEnumerable<Item> _selectedItems;
-        public IEnumerable<Item> SelectedItems
-        {
-            get => _selectedItems;
-            set => SetField(ref _selectedItems, value);
-        }
-
-        private bool _hasSelected;
-        public bool HasSelected
-        {
-            get => _hasSelected;
-            set => SetField(ref _hasSelected, value);
-        }
-
-        private ICommand _removeSelectedCommand;
-        public ICommand RemoveSelectedCommand => _removeSelectedCommand ??= new RelayCommand(
-            o =>
-            {
-                foreach (var transaction in SelectedItems)
-                {
-                    InventorySingletonInstance.Items.Remove(transaction);
-                }
-            },
-            o => SelectedItems != null && SelectedItems.Any()
-        );
-
-        private ICommand _copyIdCommand;
-        public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(o =>
-        {
-            Clipboard.SetText(string.Join("\n", SelectedItems.Select(t => t.Id.ToString())));
-        });
+        get => _selectedItems;
+        set => SetField(ref _selectedItems, value);
     }
+
+    private bool _hasSelected;
+    public bool HasSelected
+    {
+        get => _hasSelected;
+        set => SetField(ref _hasSelected, value);
+    }
+
+    private ICommand _removeSelectedCommand;
+    public ICommand RemoveSelectedCommand => _removeSelectedCommand ??= new RelayCommand(
+        _ =>
+        {
+            foreach (var transaction in SelectedItems)
+            {
+                InventorySingletonInstance.Items.Remove(transaction);
+            }
+        },
+        _ => SelectedItems?.Any() == true
+    );
+
+    private ICommand _copyIdCommand;
+    public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(_ =>
+    {
+        Clipboard.SetText(string.Join("\n", SelectedItems.Select(t => t.Id.ToString())));
+    });
 }

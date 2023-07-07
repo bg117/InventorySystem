@@ -7,8 +7,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
              xmlns:converters="clr-namespace:InventorySystem.Converters"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             mc:Ignorable="d"
              Height="Auto" Width="Auto" Title="Add transaction" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <mah:MetroWindow.DataContext>
         <viewModels:AddTransactionViewModel/>

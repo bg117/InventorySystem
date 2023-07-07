@@ -4,29 +4,28 @@ using System.Windows.Controls;
 using InventorySystem.Models;
 using InventorySystem.ViewModels;
 
-namespace InventorySystem.Views
+namespace InventorySystem.Views;
+
+/// <summary>
+/// Interaction logic for TransactionsView.xaml
+/// </summary>
+public partial class TransactionsView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for TransactionsView.xaml
-    /// </summary>
-    public partial class TransactionsView : UserControl
+    public TransactionsView()
     {
-        public TransactionsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (DataContext is not TransactionsViewModel viewModel)
-                return;
+    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (DataContext is not TransactionsViewModel viewModel)
+            return;
 
-            viewModel.SelectedTransactions = TransactionsListView.SelectedItems.Cast<Transaction>().ToList();
-        }
+        viewModel.SelectedTransactions = TransactionsListView.SelectedItems.Cast<Transaction>().ToList();
+    }
 
-        private void AddTransaction_OnClick(object sender, RoutedEventArgs e)
-        {
-            new AddTransactionView().Show();
-        }
+    private void AddTransaction_OnClick(object sender, RoutedEventArgs e)
+    {
+        new AddTransactionView().Show();
     }
 }
