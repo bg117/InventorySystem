@@ -18,7 +18,8 @@ public class Transaction : ObservableObject
     private DateTime _date;
     private Item _item;
     private string _notes;
-    private int _quantity;
+    private int _stockOut;
+    private int _stockIn;
     private TransactionStatus _status;
 
     public Guid Id
@@ -41,10 +42,15 @@ public class Transaction : ObservableObject
         get => _notes;
         set => SetField(ref _notes, value);
     }
-    public int Quantity
+    public int StockOut
     {
-        get => _quantity;
-        set => SetField(ref _quantity, value);
+        get => _stockOut;
+        set => SetField(ref _stockOut, value);
+    }
+    public int StockIn
+    {
+        get => _stockIn;
+        set => SetField(ref _stockIn, value);
     }
     public TransactionStatus Status
     {

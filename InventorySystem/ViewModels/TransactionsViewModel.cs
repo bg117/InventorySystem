@@ -21,14 +21,15 @@ public class TransactionsViewModel : ObservableObject
     }
 
     private ICommand _removeSelectedCommand;
-    public ICommand RemoveSelectedCommand => _removeSelectedCommand ??= new RelayCommand(
-        _ =>
-        {
-            foreach (var transaction in SelectedTransactions)
-            {
-                TransactionsSingletonInstance.Transactions.Remove(transaction);
-            }
-        },
-        _ => SelectedTransactions?.Any() == true
-    );
+    public ICommand RemoveSelectedCommand => _removeSelectedCommand ??= new RelayCommand(CopyId, CanCopyId);
+
+    private void CopyId()
+    {
+        Clipboard.SetText(string.Join("\n", SelectedTransactions.Select(t => t.Id.ToString())));
+    }
+
+    private bool CanCopyId()
+    {
+        return SelectedTransactions?.Any() == true;
+    }
 }

@@ -52,13 +52,23 @@ public class EditItemViewModel : ObservableObject
 
     private ICommand _updateItemCommand;
 
-    public ICommand UpdateItemCommand => _updateItemCommand ??= new RelayCommand(_ =>
+    public ICommand UpdateItemCommand => _updateItemCommand ??= new RelayCommand(UpdateItem, CanUpdateItem);
+
+    private void UpdateItem()
     {
         var idx = InventorySingletonInstance.Items.IndexOf(Item);
-        Item.Quantity = Quantity;
-        Item.Name = Name;
-        Item.Description = Description;
-        Item.Price = Price;
-        InventorySingletonInstance.Items[idx] = Item;
-    }, _ => !string.IsNullOrWhiteSpace(Name));
+        InventorySingletonInstance.Items[idx] = new Item
+        {
+            Id = Item.Id,
+            Name = Name,
+            Description = Description,
+            Quantity = Quantity,
+            Price = Price
+        };
+    }
+
+    private bool CanUpdateItem()
+    {
+        return !string.IsNullOrWhiteSpace(Name);
+    }
 }

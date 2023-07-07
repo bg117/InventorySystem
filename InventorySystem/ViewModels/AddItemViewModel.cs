@@ -38,7 +38,9 @@ public class AddItemViewModel : ObservableObject
 
     private ICommand _addItemCommand;
 
-    public ICommand AddItemCommand => _addItemCommand ??= new RelayCommand(_ =>
+    public ICommand AddItemCommand => _addItemCommand ??= new RelayCommand(AddItem, CanAddItem);
+
+    private void AddItem()
     {
         var item = new Item
         {
@@ -49,5 +51,10 @@ public class AddItemViewModel : ObservableObject
             Price = Price
         };
         InventorySingletonInstance.Items.Add(item);
-    }, _ => !string.IsNullOrWhiteSpace(Name));
+    }
+
+    private bool CanAddItem()
+    {
+        return !string.IsNullOrWhiteSpace(Name);
+    }
 }

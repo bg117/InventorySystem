@@ -27,20 +27,31 @@ public class InventoryViewModel : ObservableObject
     }
 
     private ICommand _removeSelectedCommand;
-    public ICommand RemoveSelectedCommand => _removeSelectedCommand ??= new RelayCommand(
-        _ =>
-        {
-            foreach (var transaction in SelectedItems)
-            {
-                InventorySingletonInstance.Items.Remove(transaction);
-            }
-        },
-        _ => SelectedItems?.Any() == true
-    );
+    public ICommand RemoveSelectedCommand => _removeSelectedCommand ??= new RelayCommand(RemoveSelected, CanRemoveSelected);
 
     private ICommand _copyIdCommand;
-    public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(_ =>
+    public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(CopyId, CanCopyId);
+
+    private void RemoveSelected()
+    {
+        foreach (var item in SelectedItems)
+        {
+            InventorySingletonInstance.Items.Remove(item);
+        }
+    }
+
+    private bool CanRemoveSelected()
+    {
+        return SelectedItems?.Any() == true;
+    }
+
+    private void CopyId()
     {
         Clipboard.SetText(string.Join("\n", SelectedItems.Select(t => t.Id.ToString())));
-    });
+    }
+
+    private bool CanCopyId()
+    {
+        return SelectedItems?.Any() == true;
+    }
 }

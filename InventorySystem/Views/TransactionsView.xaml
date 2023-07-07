@@ -34,7 +34,7 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        <ListView Grid.Row="1" x:Name="TransactionsListView" ItemsSource="{Binding FilteredTransactions}" SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">
+        <ListView Grid.Row="1" x:Name="TransactionsListView" ItemsSource="{Binding TransactionsSingletonInstance.Transactions}" SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">
             <ListView.Resources>
                 <ContextMenu x:Key="ItemContextMenu">
                     <MenuItem Header="Copy ID" Command="{Binding DataContext.CopyIdCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
@@ -52,7 +52,8 @@
                         <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}"/>
                         <GridViewColumn Header="Transaction Date" DisplayMemberBinding="{Binding Date}"/>
                         <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Item,Converter={StaticResource ItemToProductNameConverter}}"/>
-                        <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}"/>
+                        <GridViewColumn Header="Stock In" DisplayMemberBinding="{Binding StockIn}"/>
+                        <GridViewColumn Header="Stock Out" DisplayMemberBinding="{Binding StockOut}"/>
                         <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"/>
                         <GridViewColumn Header="Price" DisplayMemberBinding="{Binding TotalPrice,StringFormat='₱{0:#,#0.00}'}"/>
                         <GridViewColumn Header="Notes" DisplayMemberBinding="{Binding Notes}"/>

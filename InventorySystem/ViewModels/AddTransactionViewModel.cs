@@ -17,30 +17,39 @@ public class AddTransactionViewModel : ObservableObject
         set
         {
             SetField(ref _selectedItem, value);
-            TotalPrice = Quantity * SelectedItem.Price;
             MaximumStock = SelectedItem.Quantity;
+            TotalPrice = ComputeTotalPrice();
         }
     }
 
     private DateTime? _transactionDate;
     public DateTime TransactionDate
     {
-        get => _transactionDate ??= DateTime.Now;
+        get => _transactionDate ?? DateTime.Now;
         set => SetField(ref _transactionDate, value);
     }
 
-    private int _quantity = 1;
+    private int _stockOut;
 
-    public int Quantity
+    public int StockOut
     {
-        get => _quantity;
+        get => _stockOut;
         set
         {
-            SetField(ref _quantity, value);
-            if (SelectedItem != null)
-            {
-                TotalPrice = Quantity * SelectedItem.Price;
-            }
+            SetField(ref _stockOut, value);
+            TotalPrice = ComputeTotalPrice();
+        }
+    }
+
+    private int _stockIn;
+
+    public int StockIn
+    {
+        get => _stockIn;
+        set
+        {
+            SetField(ref _stockIn, value);
+            TotalPrice = ComputeTotalPrice();
         }
     }
 
@@ -67,23 +76,37 @@ public class AddTransactionViewModel : ObservableObject
 
     private ICommand _addTransactionCommand;
 
-    public ICommand AddTransactionCommand => _addTransactionCommand ??= new RelayCommand(_ =>
+    public ICommand AddTransactionCommand => _addTransactionCommand ??= new RelayCommand(AddTransaction, CanAddTransaction);
+
+    private bool CanAddTransaction()
+    {
+        return SelectedItem != null && MaximumStock + StockIn > 0 && StockOut <= MaximumStock + StockIn;
+    }
+
+    private void AddTransaction()
     {
         var transaction = new Transaction
         {
             Id = Guid.NewGuid(),
             Date = TransactionDate,
             Item = SelectedItem,
-            Quantity = Quantity,
+            StockOut = StockOut,
+            StockIn = StockIn,
             Status = TransactionStatus.Processed,
             TotalPrice = TotalPrice,
             Notes = Notes
         };
+
         TransactionsSingletonInstance.Transactions.Add(transaction);
-        MaximumStock -= Quantity;
-        if (Quantity > MaximumStock)
-            Quantity = MaximumStock;
-        InventorySingletonInstance.Items[InventorySingletonInstance.Items.IndexOf(SelectedItem)].Quantity =
-            MaximumStock;
-    }, _ => SelectedItem != null && MaximumStock > 0 && Quantity <= MaximumStock);
+
+        MaximumStock -= StockOut - StockIn;
+
+        var itemIndex = InventorySingletonInstance.Items.IndexOf(SelectedItem);
+        InventorySingletonInstance.Items[itemIndex].Quantity = MaximumStock;
+    }
+
+    private decimal ComputeTotalPrice()
+    {
+        return SelectedItem == null ? 0 : (StockOut - StockIn) * SelectedItem.Price;
+    }
 }
