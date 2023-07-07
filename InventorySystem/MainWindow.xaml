@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:views="clr-namespace:InventorySystem.Views"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Inventory System" Height="450" Width="800">
     <DockPanel>
@@ -13,12 +14,20 @@
                 <MenuItem.Items>
                     <MenuItem Header="Import...">
                         <MenuItem.Items>
-                            <MenuItem Header="Excel (.xlsx)"/>
-                            <MenuItem Header="Access (.accdb)"/>
+                            <MenuItem Header="Spreadsheet" Click="FileImportSpreadsheet_OnClick" />
                         </MenuItem.Items>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Exit" InputGestureText="Alt+F4"/>
+                    <MenuItem Header="Exit" InputGestureText="Alt+F4">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:CallMethodAction MethodName="Close"
+                                                    TargetObject="{Binding RelativeSource={RelativeSource
+                                                                   Mode=FindAncestor,
+                                                                   AncestorType=Window}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </MenuItem>
                 </MenuItem.Items>
             </MenuItem>
         </Menu>

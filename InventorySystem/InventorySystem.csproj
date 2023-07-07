@@ -175,7 +175,9 @@
     <Compile Include="Converters\ItemToProductNameConverter.cs" />
     <Compile Include="ViewModels\AddItemViewModel.cs" />
     <Compile Include="ViewModels\AddTransactionViewModel.cs" />
+    <Compile Include="Models\CellRange.cs" />
     <Compile Include="ViewModels\EditItemViewModel.cs" />
+    <Compile Include="ViewModels\ImportSpreadsheetViewModel.cs" />
     <Compile Include="ViewModels\InventorySingletonViewModel.cs" />
     <Compile Include="ViewModels\InventoryViewModel.cs" />
     <Compile Include="ViewModels\TransactionsSingletonViewModel.cs" />
@@ -188,6 +190,9 @@
     </Compile>
     <Compile Include="Views\AddItemView.xaml.cs">
       <DependentUpon>AddItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImportSpreadsheetView.xaml.cs">
+      <DependentUpon>ImportSpreadsheetView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\InventoryView.xaml.cs">
       <DependentUpon>InventoryView.xaml</DependentUpon>
@@ -219,6 +224,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AddItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImportSpreadsheetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

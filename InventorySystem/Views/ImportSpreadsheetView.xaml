@@ -1,0 +1,63 @@
+﻿<mah:MetroWindow x:Class="InventorySystem.Views.ImportSpreadsheetView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:viewmodels="clr-namespace:InventorySystem.ViewModels"
+        mc:Ignorable="d"
+        Title="Import spreadsheet" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow">
+    <mah:MetroWindow.DataContext>
+        <viewmodels:ImportSpreadsheetViewModel />
+    </mah:MetroWindow.DataContext>
+    <StackPanel Orientation="Vertical">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="256" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0">File</Label>
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <Button DockPanel.Dock="Right" Click="Browse_OnClick">Browse</Button>
+                <TextBox IsReadOnly="True" Text="{Binding FilePath,UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+
+            <Label Grid.Row="1" Grid.Column="0">Inventory Worksheet</Label>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SheetNames,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding InventorySheetName,Mode=TwoWay}" />
+
+            <Label Grid.Row="2" Grid.Column="0">Inventory Range</Label>
+            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                <TextBox MinWidth="32" Text="{Binding InventoryCellRange.StartCell,Mode=TwoWay}" />
+                <Label>to</Label>
+                <TextBox MinWidth="32" Text="{Binding InventoryCellRange.EndCell,Mode=TwoWay}" />
+            </StackPanel>
+
+            <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
+
+            <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding IncludeTransactions,Mode=TwoWay}">Include transaction history</CheckBox>
+
+            <Label Grid.Row="5" Grid.Column="0" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >Transaction Worksheet</Label>
+            <ComboBox Grid.Row="5" Grid.Column="1" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding SheetNames,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding TransactionSheetName,Mode=TwoWay}" />
+
+            <Label Grid.Row="6" Grid.Column="0" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >Transaction Range</Label>
+            <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+                <TextBox MinWidth="32" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Text="{Binding TransactionCellRange.StartCell,Mode=TwoWay}" />
+                <Label>to</Label>
+                <TextBox MinWidth="32" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Text="{Binding TransactionCellRange.EndCell,Mode=TwoWay}" />
+            </StackPanel>
+        </Grid>
+        <Button>
+            Import
+        </Button>
+    </StackPanel>
+</mah:MetroWindow>

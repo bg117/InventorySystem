@@ -1,4 +1,6 @@
-﻿using MahApps.Metro.Controls;
+﻿using InventorySystem.Views;
+using MahApps.Metro.Controls;
+using System.Windows;
 
 namespace InventorySystem;
 
@@ -10,5 +12,11 @@ public partial class MainWindow : MetroWindow
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    private void FileImportSpreadsheet_OnClick(object sender, RoutedEventArgs e)
+    {
+        var importSpreadsheetView = new ImportSpreadsheetView();
+        importSpreadsheetView.ShowDialog();
     }
 }
