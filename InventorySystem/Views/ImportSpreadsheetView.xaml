@@ -6,7 +6,7 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:viewmodels="clr-namespace:InventorySystem.ViewModels"
         mc:Ignorable="d"
-        Title="Import spreadsheet" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow">
+        Title="Import spreadsheet" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow" Closing="MetroWindow_Closing">
     <mah:MetroWindow.DataContext>
         <viewmodels:ImportSpreadsheetViewModel />
     </mah:MetroWindow.DataContext>
@@ -56,7 +56,7 @@
                 <TextBox MinWidth="32" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Text="{Binding TransactionCellRange.EndCell,Mode=TwoWay}" />
             </StackPanel>
         </Grid>
-        <Button>
+        <Button Command="{Binding ImportCommand}">
             Import
         </Button>
     </StackPanel>

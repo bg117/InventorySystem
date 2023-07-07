@@ -5,9 +5,14 @@ namespace InventorySystem.ViewModels;
 
 public sealed class InventorySingletonViewModel : ObservableObject
 {
-    public ObservableCollectionWithItemNotify<Item> Items { get; } = new();
+    private ObservableCollectionWithItemNotify<Item> _items = new();
+    public ObservableCollectionWithItemNotify<Item> Items
+    {
+        get => _items;
+        set => SetField(ref _items, value);
+    }
 
     private InventorySingletonViewModel() {}
 
-    public static InventorySingletonViewModel Instance { get; } = new();
+    public static InventorySingletonViewModel Instance { get; set; } = new();
 }
