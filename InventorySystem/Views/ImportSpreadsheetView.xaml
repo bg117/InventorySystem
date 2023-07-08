@@ -4,16 +4,20 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-                 xmlns:viewmodels="clr-namespace:InventorySystem.ViewModels"
+                 xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  mc:Ignorable="d"
                  Title="Import spreadsheet" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight"
                  ResizeMode="NoResize" WindowStyle="ToolWindow">
     <mah:MetroWindow.DataContext>
-        <viewmodels:ImportSpreadsheetViewModel />
+        <viewModels:ImportSpreadsheetViewModel />
     </mah:MetroWindow.DataContext>
     <mah:MetroWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <Style x:Key="MetroExpanderWithNormalCase" TargetType="Expander"
+               BasedOn="{StaticResource MahApps.Styles.Expander}">
+            <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal" />
+        </Style>
     </mah:MetroWindow.Resources>
     <StackPanel Orientation="Vertical" Margin="8">
         <Grid>
@@ -46,13 +50,36 @@
                       SelectedValue="{Binding InventorySheetName,Mode=TwoWay}" />
 
             <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="0">Inventory Table</Label>
-            <StackPanel Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                <Label>starts at</Label>
-                <TextBox MinWidth="32"
-                         Text="{Binding InventoryStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                <Label>, consists of</Label>
-                <mah:NumericUpDown Minimum="1" MinWidth="32" Value="{Binding InventoryRows,Mode=TwoWay}" />
-                <Label>rows</Label>
+            <StackPanel Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label>starts at</Label>
+                    <TextBox MinWidth="32"
+                             Text="{Binding InventoryStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <Label>, consists of</Label>
+                    <mah:NumericUpDown Minimum="1" MinWidth="32" Value="{Binding InventoryRows,Mode=TwoWay}" />
+                    <Label>rows</Label>
+                </StackPanel>
+                <Expander Header="More information about the inventory table" Margin="0 4 0 0"
+                          mah:HeaderedControlHelper.HeaderBackground="Transparent"
+                          Style="{StaticResource MetroExpanderWithNormalCase}">
+                    <TextBlock Foreground="Gray">
+                        The inventory table must have the following columns:
+                        <LineBreak />
+                        <LineBreak />
+                        <Run FontWeight="Bold">ID</Run> - the identification number of the item
+                        <LineBreak />
+                        <Run FontWeight="Bold">Name</Run> - the name of the item
+                        <LineBreak />
+                        <Run FontWeight="Bold">Description</Run> - the description of the item (leave blank if none)
+                        <LineBreak />
+                        <Run FontWeight="Bold">Quantity</Run> - the quantity of the item
+                        <LineBreak />
+                        <Run FontWeight="Bold">Price</Run> - the price of one unit of the item
+                        <LineBreak />
+                        <LineBreak />
+                        These columns <Run FontWeight="Bold">must</Run> be in the order listed above.
+                    </TextBlock>
+                </Expander>
             </StackPanel>
 
             <Separator Margin="0 0 0 4" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
@@ -73,16 +100,49 @@
 
             <Label Margin="0 0 0 4" Grid.Row="6" Grid.Column="0"
                    IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">
-                Transaction Range
+                Transaction Table
             </Label>
-            <StackPanel Margin="0 0 0 4" Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">starts at</Label>
-                <TextBox IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" MinWidth="32"
-                         Text="{Binding TransactionStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">, consists of</Label>
-                <mah:NumericUpDown IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}"
-                                   Minimum="1" MinWidth="32" Value="{Binding TransactionRows,Mode=TwoWay}" />
-                <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">rows</Label>
+            <StackPanel Margin="0 0 0 4" Grid.Row="6" Grid.Column="1" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">starts at</Label>
+                    <TextBox IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}"
+                             MinWidth="32"
+                             Text="{Binding TransactionStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">, consists of</Label>
+                    <mah:NumericUpDown IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}"
+                                       Minimum="1" MinWidth="32" Value="{Binding TransactionRows,Mode=TwoWay}" />
+                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">rows</Label>
+                </StackPanel>
+                <Expander Header="More information about the transaction history table" Margin="0 4 0 0"
+                          mah:HeaderedControlHelper.HeaderBackground="Transparent"
+                          Style="{StaticResource MetroExpanderWithNormalCase}">
+                    <TextBlock Foreground="Gray">
+                        The transaction history table must have the following columns:
+                        <LineBreak />
+                        <LineBreak />
+                        <Run FontWeight="Bold">ID</Run> - the GUID of the transaction
+                        <LineBreak />
+                        <Run FontWeight="Bold">Date</Run> - the date of the transaction formatted in ISO 8601 format
+                        (<Run FontWeight="Bold">yyyy-MM-ddThh:mm:ss</Run>)
+                        <LineBreak />
+                        <Run FontWeight="Bold">Item ID</Run> - the identification number of the item
+                        <LineBreak />
+                        <Run FontWeight="Bold">Stock In</Run> - the amount of stock that was added to the item
+                        <LineBreak />
+                        <Run FontWeight="Bold">Stock Out</Run> - the amount of stock that was removed from the item
+                        <LineBreak />
+                        <Run FontWeight="Bold">Status</Run> - the status of the transaction. This can be one of the following:
+                        <Run FontWeight="Bold">Processed</Run>, <Run FontWeight="Bold">Processing</Run>,
+                        <Run FontWeight="Bold">Pending</Run>, <Run FontWeight="Bold">Failed</Run>
+                        <LineBreak />
+                        <Run FontWeight="Bold">Total Price</Run> - the total price of the transaction
+                        <LineBreak />
+                        <Run FontWeight="Bold">Notes</Run> - notes about the transaction (leave blank if none)
+                        <LineBreak />
+                        <LineBreak />
+                        These columns <Run FontWeight="Bold">must</Run> be in the order listed above.
+                    </TextBlock>
+                </Expander>
             </StackPanel>
         </Grid>
         <!-- Error -->

@@ -5,10 +5,37 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:local="clr-namespace:InventorySystem.Views"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <mah:MetroAnimatedTabControl mah:TabControlHelper.Underlined="TabPanel">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem.Items>
+                    <MenuItem Header="Import...">
+                        <MenuItem.Items>
+                            <MenuItem Header="Spreadsheet" Click="FileImportSpreadsheet_OnClick" />
+                        </MenuItem.Items>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Exit" InputGestureText="Alt+F4">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="Click">
+                                <b:CallMethodAction MethodName="Close"
+                                                    TargetObject="{Binding RelativeSource={RelativeSource
+                                                                   Mode=FindAncestor,
+                                                                   AncestorType=Window}}" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </MenuItem>
+                </MenuItem.Items>
+            </MenuItem>
+        </Menu>
+        <mah:MetroAnimatedTabControl Grid.Row="1" mah:TabControlHelper.Underlined="TabPanel">
             <mah:MetroTabItem Header="Transactions">
                 <local:TransactionsView Margin="8" />
             </mah:MetroTabItem>

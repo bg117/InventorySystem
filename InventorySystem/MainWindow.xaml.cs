@@ -13,10 +13,4 @@ public partial class MainWindow : MetroWindow
     {
         InitializeComponent();
     }
-
-    private void FileImportSpreadsheet_OnClick(object sender, RoutedEventArgs e)
-    {
-        var importSpreadsheetView = new ImportSpreadsheetView();
-        importSpreadsheetView.ShowDialog();
-    }
 }
