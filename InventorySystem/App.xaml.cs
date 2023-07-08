@@ -1,10 +1,10 @@
-﻿using OfficeOpenXml;
-using System.Windows;
+﻿using System.Windows;
+using OfficeOpenXml;
 
 namespace InventorySystem;
 
 /// <summary>
-/// Interaction logic for App.xaml
+///     Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
 {

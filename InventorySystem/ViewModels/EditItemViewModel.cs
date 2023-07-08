@@ -6,9 +6,17 @@ namespace InventorySystem.ViewModels;
 
 public class EditItemViewModel : ViewModelBase
 {
-    public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;
-
+    private string _description;
     private Item _item = new();
+
+    private string _name;
+
+    private decimal _price;
+
+    private int _quantity;
+
+    private ICommand _updateItemCommand;
+
     public Item Item
     {
         get => _item;
@@ -22,42 +30,36 @@ public class EditItemViewModel : ViewModelBase
         }
     }
 
-    private string _name;
     public string Name
     {
         get => _name;
         set => SetField(ref _name, value);
     }
 
-    private string _description;
     public string Description
     {
         get => _description;
         set => SetField(ref _description, value);
     }
 
-    private int _quantity;
     public int Quantity
     {
         get => _quantity;
         set => SetField(ref _quantity, value);
     }
 
-    private decimal _price;
     public decimal Price
     {
         get => _price;
         set => SetField(ref _price, value);
     }
 
-    private ICommand _updateItemCommand;
-
     public ICommand UpdateItemCommand => _updateItemCommand ??= new RelayCommand(UpdateItem, CanUpdateItem);
 
     private void UpdateItem()
     {
-        var idx = InventorySingletonInstance.Items.IndexOf(Item);
-        InventorySingletonInstance.Items[idx] = new Item
+        var idx = InventorySingletonViewModel.Instance.Items.IndexOf(Item);
+        InventorySingletonViewModel.Instance.Items[idx] = new Item
         {
             Id = Item.Id,
             Name = Name,

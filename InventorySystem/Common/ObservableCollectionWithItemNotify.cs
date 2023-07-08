@@ -7,7 +7,6 @@ namespace InventorySystem.Common;
 
 public sealed class ObservableCollectionWithItemNotify<T> : ObservableCollection<T> where T : INotifyPropertyChanged
 {
-
     public ObservableCollectionWithItemNotify()
     {
         CollectionChanged += items_CollectionChanged;
@@ -19,7 +18,6 @@ public sealed class ObservableCollectionWithItemNotify<T> : ObservableCollection
         CollectionChanged += items_CollectionChanged;
         foreach (var item in collection)
             item.PropertyChanged += item_PropertyChanged;
-
     }
 
     private void items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -43,5 +41,4 @@ public sealed class ObservableCollectionWithItemNotify<T> : ObservableCollection
         var reset = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
         OnCollectionChanged(reset);
     }
-
 }

@@ -1,11 +1,11 @@
-﻿using InventorySystem.Views;
+﻿using System.Windows;
+using InventorySystem.Views;
 using MahApps.Metro.Controls;
-using System.Windows;
 
 namespace InventorySystem;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+///     Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : MetroWindow
 {

@@ -1,13 +1,13 @@
-﻿using InventorySystem.Models;
-using InventorySystem.ViewModels;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using InventorySystem.Models;
+using InventorySystem.ViewModels;
 
 namespace InventorySystem.Views;
 
 /// <summary>
-/// Interaction logic for InventoryView.xaml
+///     Interaction logic for InventoryView.xaml
 /// </summary>
 public partial class InventoryView : UserControl
 {
@@ -35,9 +35,6 @@ public partial class InventoryView : UserControl
         if (DataContext is not InventoryViewModel viewModel)
             return;
 
-        foreach (var item in viewModel.SelectedItems)
-        {
-            new EditItemView(item).Show();
-        }
+        foreach (var item in viewModel.SelectedItems) new EditItemView(item).Show();
     }
 }

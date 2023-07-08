@@ -6,37 +6,39 @@ namespace InventorySystem.ViewModels;
 
 public class AddItemViewModel : ViewModelBase
 {
-    public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;
+    private ICommand _addItemCommand;
+
+    private string _description;
 
     private string _name;
+
+    private decimal _price;
+
+    private int _quantity = 1;
+
     public string Name
     {
         get => _name;
         set => SetField(ref _name, value);
     }
 
-    private string _description;
     public string Description
     {
         get => _description;
         set => SetField(ref _description, value);
     }
 
-    private int _quantity = 1;
     public int Quantity
     {
         get => _quantity;
         set => SetField(ref _quantity, value);
     }
 
-    private decimal _price;
     public decimal Price
     {
         get => _price;
         set => SetField(ref _price, value);
     }
-
-    private ICommand _addItemCommand;
 
     public ICommand AddItemCommand => _addItemCommand ??= new RelayCommand(AddItem, CanAddItem);
 
@@ -50,7 +52,8 @@ public class AddItemViewModel : ViewModelBase
             Quantity = Quantity,
             Price = Price
         };
-        InventorySingletonInstance.Items.Add(item);
+
+        InventorySingletonViewModel.Instance.Items.Add(item);
     }
 
     private bool CanAddItem()

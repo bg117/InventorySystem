@@ -1,74 +1,89 @@
 ﻿<mah:MetroWindow x:Class="InventorySystem.Views.AddTransactionView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
-             xmlns:converters="clr-namespace:InventorySystem.Converters"
-             mc:Ignorable="d"
-             Height="Auto" Width="Auto" Title="Add transaction" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow">
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
+                 xmlns:converters="clr-namespace:InventorySystem.Converters"
+                 mc:Ignorable="d"
+                 Height="Auto" Width="Auto" Title="Add transaction" SizeToContent="WidthAndHeight"
+                 ResizeMode="NoResize" WindowStyle="ToolWindow">
     <mah:MetroWindow.DataContext>
-        <viewModels:AddTransactionViewModel/>
+        <viewModels:AddTransactionViewModel />
     </mah:MetroWindow.DataContext>
     <mah:MetroWindow.Resources>
-        <converters:ItemToProductNameConverter x:Key="ItemToProductNameConverter"/>
+        <converters:ItemToProductNameConverter x:Key="ItemToProductNameConverter" />
     </mah:MetroWindow.Resources>
     <StackPanel Orientation="Vertical" Margin="8">
-        <mah:MetroHeader Header="Add new transaction" mah:HeaderedControlHelper.HeaderFontSize="24" mah:HeaderedControlHelper.HeaderVerticalContentAlignment="Top" mah:HeaderedControlHelper.HeaderMargin="0 0 0 8"/>
+        <mah:MetroHeader Header="Add new transaction" mah:HeaderedControlHelper.HeaderFontSize="24"
+                         mah:HeaderedControlHelper.HeaderVerticalContentAlignment="Top"
+                         mah:HeaderedControlHelper.HeaderMargin="0 0 0 8" />
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*" MinWidth="256"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="256" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Label Margin="0 0 0 4" Grid.Row="0" Grid.Column="0">Product</Label>
-            <ComboBox Margin="0 0 0 4" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding InventorySingletonInstance.Items}" SelectedItem="{Binding SelectedItem}">
+            <ComboBox Margin="0 0 0 4" Grid.Row="0" Grid.Column="1"
+                      ItemsSource="{Binding Items,Source={x:Static viewModels:InventorySingletonViewModel.Instance}}"
+                      SelectedItem="{Binding SelectedItem}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource ItemToProductNameConverter}}"/>
+                        <TextBlock Text="{Binding Converter={StaticResource ItemToProductNameConverter}}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
             <Label Margin="0 0 0 4" Grid.Row="1" Grid.Column="0">Date of Transaction</Label>
-            <mah:DateTimePicker Margin="0 0 0 4" DisplayDate="{Binding TransactionDate,Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+            <mah:DateTimePicker Margin="0 0 0 4" DisplayDate="{Binding TransactionDate,Mode=TwoWay}" Grid.Row="1"
+                                Grid.Column="1" />
 
-            <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Content="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Stock: {0}"/>
+            <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="1"
+                   Content="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}"
+                   ContentStringFormat="Stock: {0}" />
 
             <Label Margin="0 0 0 4" Grid.Row="3" Grid.Column="0">Stock In</Label>
-            <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="3" Grid.Column="1" Value="{Binding StockIn,Mode=TwoWay}" Minimum="0"/>
+            <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="3" Grid.Column="1" Value="{Binding StockIn,Mode=TwoWay}"
+                               Minimum="0" />
 
             <Label Margin="0 0 0 4" Grid.Row="4" Grid.Column="0">Stock Out</Label>
-            <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="4" Grid.Column="1" Value="{Binding StockOut,Mode=TwoWay}" Minimum="0" Maximum="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}"/>
+            <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="4" Grid.Column="1" Value="{Binding StockOut,Mode=TwoWay}"
+                               Minimum="0" Maximum="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}" />
 
             <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="0">Total Price</Label>
-            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="1" Content="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="₱{0:#,#0.00}"/>
+            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="1"
+                   Content="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged}"
+                   ContentStringFormat="₱{0:#,#0.00}" />
 
-            <Separator Margin="0 0 0 4" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Separator Margin="0 0 0 4" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" />
 
             <Label Margin="0 0 0 4" Grid.Row="7" Grid.Column="0">Notes about Transaction</Label>
-            <TextBox Margin="0 0 0 4" Grid.Row="7" Grid.Column="1" Text="{Binding Notes,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap"/>
+            <TextBox Margin="0 0 0 4" Grid.Row="7" Grid.Column="1"
+                     Text="{Binding Notes,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" AcceptsReturn="True"
+                     TextWrapping="Wrap" />
         </Grid>
-        <Button Command="{Binding AddTransactionCommand}" Style="{StaticResource MahApps.Styles.Button.Dialogs}" Content="Add transaction">
+        <Button Command="{Binding AddTransactionCommand}" Style="{StaticResource MahApps.Styles.Button.Dialogs}"
+                Content="Add transaction">
             <Button.ContentTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterial Kind="Plus"
-                                            VerticalAlignment="Center" />
+                                                    VerticalAlignment="Center" />
                         <TextBlock Text="{Binding}"
-                            Margin="4 0"
-                            VerticalAlignment="Center" />
+                                   Margin="4 0"
+                                   VerticalAlignment="Center" />
                     </StackPanel>
                 </DataTemplate>
             </Button.ContentTemplate>

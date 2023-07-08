@@ -7,7 +7,7 @@ using InventorySystem.ViewModels;
 namespace InventorySystem.Views;
 
 /// <summary>
-/// Interaction logic for TransactionsView.xaml
+///     Interaction logic for TransactionsView.xaml
 /// </summary>
 public partial class TransactionsView : UserControl
 {
