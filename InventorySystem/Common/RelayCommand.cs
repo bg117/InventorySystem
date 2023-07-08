@@ -17,8 +17,10 @@ public class RelayCommand<T> : ICommand
     public bool CanExecute(object parameter)
     {
         if (parameter is not T t)
+        {
             throw new ArgumentException(
                 $"Expected parameter of type {typeof(T).Name}, got {parameter?.GetType().Name ?? "null"}");
+        }
 
         return _canExecute(t);
     }
@@ -26,8 +28,10 @@ public class RelayCommand<T> : ICommand
     public void Execute(object parameter)
     {
         if (parameter is not T t)
+        {
             throw new ArgumentException(
                 $"Expected parameter of type {typeof(T).Name}, got {parameter?.GetType().Name ?? "null"}");
+        }
 
         _execute(t);
     }

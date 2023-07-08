@@ -41,7 +41,7 @@
                 <ContextMenu x:Key="ItemContextMenu">
                     <MenuItem Header="Copy ID"
                               Command="{Binding DataContext.CopyIdCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
-                    <MenuItem Header="Delete selected"
+                    <MenuItem Header="Remove selected"
                               Command="{Binding DataContext.RemoveSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
                 </ContextMenu>
             </ListView.Resources>

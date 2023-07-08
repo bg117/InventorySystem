@@ -12,7 +12,6 @@ public sealed class ObservableCollectionWithItemNotify<T> : ObservableCollection
         CollectionChanged += items_CollectionChanged;
     }
 
-
     public ObservableCollectionWithItemNotify(IEnumerable<T> collection) : base(collection)
     {
         CollectionChanged += items_CollectionChanged;
@@ -26,8 +25,10 @@ public sealed class ObservableCollectionWithItemNotify<T> : ObservableCollection
             return;
 
         if (e.OldItems != null)
+        {
             foreach (INotifyPropertyChanged item in e.OldItems)
                 item.PropertyChanged -= item_PropertyChanged;
+        }
 
         if (e.NewItems == null)
             return;

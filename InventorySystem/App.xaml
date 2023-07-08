@@ -8,7 +8,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary
-                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/light.green.xaml" />
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/light.indigo.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

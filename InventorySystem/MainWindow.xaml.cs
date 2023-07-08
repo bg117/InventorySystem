@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using InventorySystem.Views;
-using MahApps.Metro.Controls;
+﻿using MahApps.Metro.Controls;
 
 namespace InventorySystem;
 

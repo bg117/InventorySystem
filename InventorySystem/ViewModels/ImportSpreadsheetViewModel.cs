@@ -104,15 +104,16 @@ public class ImportSpreadsheetViewModel : ViewModelBase
 
     public event Action SpreadsheetImported;
 
-
     private bool CanImport()
     {
         var initial = !string.IsNullOrWhiteSpace(FilePath) && !string.IsNullOrWhiteSpace(InventorySheetName) &&
                       !string.IsNullOrWhiteSpace(InventoryStartCell) && InventoryRows > 0;
 
         if (IncludeTransactions)
+        {
             initial = initial && !string.IsNullOrWhiteSpace(TransactionSheetName) &&
                       !string.IsNullOrWhiteSpace(TransactionStartCell) && TransactionRows > 0;
+        }
 
         return initial;
     }
@@ -147,6 +148,7 @@ public class ImportSpreadsheetViewModel : ViewModelBase
 
         var transactions = new List<Transaction>();
         for (var i = transactionStartCell.Item1; i < transactionStartCell.Item1 + TransactionRows; i++)
+        {
             try
             {
                 var baseColumn = transactionStartCell.Item2;
@@ -171,6 +173,7 @@ public class ImportSpreadsheetViewModel : ViewModelBase
                 ErrorViewModelInstance.HasError = true;
                 return transactions;
             }
+        }
 
         return transactions;
     }
@@ -182,6 +185,7 @@ public class ImportSpreadsheetViewModel : ViewModelBase
 
         var inventory = new List<Item>();
         for (var i = inventoryStartCell.Item1; i < inventoryStartCell.Item1 + InventoryRows; i++)
+        {
             try
             {
                 var baseColumn = inventoryStartCell.Item2;
@@ -201,6 +205,7 @@ public class ImportSpreadsheetViewModel : ViewModelBase
                 ErrorViewModelInstance.HasError = true;
                 return inventory;
             }
+        }
 
         return inventory;
     }

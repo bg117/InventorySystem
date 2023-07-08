@@ -5,7 +5,6 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:views="clr-namespace:InventorySystem.Views"
-                 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  mc:Ignorable="d"
                  Title="Inventory System" Height="450" Width="800">
     <views:MainView />

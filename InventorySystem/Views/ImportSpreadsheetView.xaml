@@ -38,7 +38,7 @@
             <Label Margin="0 0 0 4" Grid.Row="0" Grid.Column="0">File</Label>
             <DockPanel Margin="0 0 0 4" Grid.Row="0" Grid.Column="1">
                 <Button DockPanel.Dock="Right" Click="Browse_OnClick"
-                        Style="{StaticResource MahApps.Styles.Button.Flat}">
+                        Style="{StaticResource MahApps.Styles.Button.MetroSquare}">
                     Browse
                 </Button>
                 <TextBox IsReadOnly="True" Text="{Binding FilePath,UpdateSourceTrigger=PropertyChanged}" />
@@ -60,7 +60,7 @@
                     <Label>rows</Label>
                 </StackPanel>
                 <Expander Header="More information about the inventory table" Margin="0 4 0 0"
-                          mah:HeaderedControlHelper.HeaderBackground="Transparent"
+                          mah:HeaderedControlHelper.HeaderBackground="Transparent" BorderThickness="0"
                           Style="{StaticResource MetroExpanderWithNormalCase}">
                     <TextBlock Foreground="Gray">
                         The inventory table must have the following columns:
@@ -114,7 +114,7 @@
                     <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">rows</Label>
                 </StackPanel>
                 <Expander Header="More information about the transaction history table" Margin="0 4 0 0"
-                          mah:HeaderedControlHelper.HeaderBackground="Transparent"
+                          mah:HeaderedControlHelper.HeaderBackground="Transparent" BorderThickness="0"
                           Style="{StaticResource MetroExpanderWithNormalCase}">
                     <TextBlock Foreground="Gray">
                         The transaction history table must have the following columns:
