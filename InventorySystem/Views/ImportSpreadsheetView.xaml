@@ -4,13 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:viewmodels="clr-namespace:InventorySystem.ViewModels"
-        mc:Ignorable="d"
-        Title="Import spreadsheet" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow" Closing="MetroWindow_Closing">
+        xmlns:viewmodels="clr-namespace:InventorySystem.ViewModels" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 mc:Ignorable="d"
+        Title="Import spreadsheet" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStyle="ToolWindow">
     <mah:MetroWindow.DataContext>
         <viewmodels:ImportSpreadsheetViewModel />
     </mah:MetroWindow.DataContext>
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical" Margin="8">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -26,38 +26,56 @@
                 <ColumnDefinition Width="*" MinWidth="256" />
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0">File</Label>
-            <DockPanel Grid.Row="0" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Click="Browse_OnClick">Browse</Button>
+            <Label Margin="0 0 0 4" Grid.Row="0" Grid.Column="0">File</Label>
+            <DockPanel Margin="0 0 0 4" Grid.Row="0" Grid.Column="1">
+                <Button DockPanel.Dock="Right" Click="Browse_OnClick" Style="{StaticResource MahApps.Styles.Button.Flat}">Browse</Button>
                 <TextBox IsReadOnly="True" Text="{Binding FilePath,UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
 
-            <Label Grid.Row="1" Grid.Column="0">Inventory Worksheet</Label>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SheetNames,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding InventorySheetName,Mode=TwoWay}" />
+            <Label Margin="0 0 0 4" Grid.Row="1" Grid.Column="0">Inventory Worksheet</Label>
+            <ComboBox Margin="0 0 0 4" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SheetNames,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding InventorySheetName,Mode=TwoWay}" />
 
-            <Label Grid.Row="2" Grid.Column="0">Inventory Range</Label>
-            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="0">Inventory Range</Label>
+            <StackPanel Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                 <TextBox MinWidth="32" Text="{Binding InventoryCellRange.StartCell,Mode=TwoWay}" />
                 <Label>to</Label>
                 <TextBox MinWidth="32" Text="{Binding InventoryCellRange.EndCell,Mode=TwoWay}" />
             </StackPanel>
 
-            <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
+            <Separator Margin="0 0 0 4" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
 
-            <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding IncludeTransactions,Mode=TwoWay}">Include transaction history</CheckBox>
+            <CheckBox Margin="0 0 0 4" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding IncludeTransactions,Mode=TwoWay}">Include transaction history</CheckBox>
 
-            <Label Grid.Row="5" Grid.Column="0" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >Transaction Worksheet</Label>
-            <ComboBox Grid.Row="5" Grid.Column="1" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding SheetNames,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding TransactionSheetName,Mode=TwoWay}" />
+            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="0" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >Transaction Worksheet</Label>
+            <ComboBox Margin="0 0 0 4" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding SheetNames,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding TransactionSheetName,Mode=TwoWay}" />
 
-            <Label Grid.Row="6" Grid.Column="0" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >Transaction Range</Label>
-            <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+            <Label Margin="0 0 0 4" Grid.Row="6" Grid.Column="0" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >Transaction Range</Label>
+            <StackPanel Margin="0 0 0 4" Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
                 <TextBox MinWidth="32" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Text="{Binding TransactionCellRange.StartCell,Mode=TwoWay}" />
                 <Label>to</Label>
                 <TextBox MinWidth="32" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Text="{Binding TransactionCellRange.EndCell,Mode=TwoWay}" />
             </StackPanel>
         </Grid>
-        <Button Command="{Binding ImportCommand}">
-            Import
+        <Button Command="{Binding ImportCommand}" Content="Import" Style="{StaticResource MahApps.Styles.Button.Dialogs}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:CallMethodAction MethodName="Close"
+                                                    TargetObject="{Binding RelativeSource={RelativeSource
+                                                                   Mode=FindAncestor,
+                                                                   AncestorType=Window}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Button.ContentTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Import"
+                                            VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding}"
+                            Margin="4 0"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </Button.ContentTemplate>
         </Button>
     </StackPanel>
 </mah:MetroWindow>

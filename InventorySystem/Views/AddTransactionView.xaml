@@ -17,7 +17,7 @@
     </mah:MetroWindow.Resources>
     <StackPanel Orientation="Vertical" Margin="8">
         <mah:MetroHeader Header="Add new transaction" mah:HeaderedControlHelper.HeaderFontSize="24" mah:HeaderedControlHelper.HeaderVerticalContentAlignment="Top" mah:HeaderedControlHelper.HeaderMargin="0 0 0 8"/>
-        <Grid Margin="0 0 0 4">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" MinWidth="256"/>
@@ -32,39 +32,46 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0">Product</Label>
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding InventorySingletonInstance.Items}" SelectedItem="{Binding SelectedItem}">
+            <Label Margin="0 0 0 4" Grid.Row="0" Grid.Column="0">Product</Label>
+            <ComboBox Margin="0 0 0 4" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding InventorySingletonInstance.Items}" SelectedItem="{Binding SelectedItem}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource ItemToProductNameConverter}}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            
-            <Label Grid.Row="1" Grid.Column="0">Date of Transaction</Label>
-            <mah:DateTimePicker DisplayDate="{Binding TransactionDate,Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
 
-            <Label Grid.Row="2" Grid.Column="1" Content="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Stock: {0}"/>
+            <Label Margin="0 0 0 4" Grid.Row="1" Grid.Column="0">Date of Transaction</Label>
+            <mah:DateTimePicker Margin="0 0 0 4" DisplayDate="{Binding TransactionDate,Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
 
-            <Label Grid.Row="3" Grid.Column="0">Stock In</Label>
-            <mah:NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding StockIn,Mode=TwoWay}" Minimum="0"/>
-            
-            <Label Grid.Row="4" Grid.Column="0">Stock Out</Label>
-            <mah:NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding StockOut,Mode=TwoWay}" Minimum="0" Maximum="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Content="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="Stock: {0}"/>
 
-            <Label Grid.Row="5" Grid.Column="0">Total Price</Label>
-            <Label Grid.Row="5" Grid.Column="1" Content="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="₱{0:#,#0.00}"/>
+            <Label Margin="0 0 0 4" Grid.Row="3" Grid.Column="0">Stock In</Label>
+            <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="3" Grid.Column="1" Value="{Binding StockIn,Mode=TwoWay}" Minimum="0"/>
 
-            <Separator Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Label Margin="0 0 0 4" Grid.Row="4" Grid.Column="0">Stock Out</Label>
+            <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="4" Grid.Column="1" Value="{Binding StockOut,Mode=TwoWay}" Minimum="0" Maximum="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}"/>
 
-            <Label Grid.Row="7" Grid.Column="0">Notes about Transaction</Label>
-            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Notes,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap"/>
+            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="0">Total Price</Label>
+            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="1" Content="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="₱{0:#,#0.00}"/>
+
+            <Separator Margin="0 0 0 4" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+            <Label Margin="0 0 0 4" Grid.Row="7" Grid.Column="0">Notes about Transaction</Label>
+            <TextBox Margin="0 0 0 4" Grid.Row="7" Grid.Column="1" Text="{Binding Notes,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" AcceptsReturn="True" TextWrapping="Wrap"/>
         </Grid>
-        <Button Command="{Binding AddTransactionCommand}">
-            <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconMaterial Kind="Plus"/>
-                <TextBlock Margin="4 0">Add transaction</TextBlock>
-            </StackPanel>
+        <Button Command="{Binding AddTransactionCommand}" Style="{StaticResource MahApps.Styles.Button.Dialogs}" Content="Add transaction">
+            <Button.ContentTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Plus"
+                                            VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding}"
+                            Margin="4 0"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </Button.ContentTemplate>
         </Button>
     </StackPanel>
 

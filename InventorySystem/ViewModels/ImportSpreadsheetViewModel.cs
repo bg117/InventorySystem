@@ -2,13 +2,16 @@
 using InventorySystem.Common;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Input;
 using System;
+using OfficeOpenXml;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace InventorySystem.ViewModels;
 
-public class ImportSpreadsheetViewModel : ObservableObject, IDisposable
+public class ImportSpreadsheetViewModel : ObservableObject
 {
     private string _filePath;
     public string FilePath
@@ -18,13 +21,9 @@ public class ImportSpreadsheetViewModel : ObservableObject, IDisposable
         {
             SetField(ref _filePath, value);
 
-            if (_workbook != null)
-            {
-                _workbook.Close();
-                Marshal.ReleaseComObject(_workbook);
-            }
+            _excelApp?.Dispose();
+            _excelApp = new ExcelPackage(new FileInfo(FilePath));
 
-            _workbook = _workbooks.Open(FilePath);
             SheetNames = GetSheetNames();
         }
     }
@@ -71,27 +70,17 @@ public class ImportSpreadsheetViewModel : ObservableObject, IDisposable
         set => SetField(ref _transactionCellRange, value);
     }
 
-    private readonly Excel.Application _excelApp;
-    private readonly Excel.Workbooks _workbooks;
-    private Excel.Workbook _workbook;
-
-    public ImportSpreadsheetViewModel()
-    {
-        _excelApp = new Excel.Application();
-        _workbooks = _excelApp.Workbooks;
-    }
+    private ExcelPackage _excelApp;
 
     private IEnumerable<string> GetSheetNames()
     {
-        var sheets = _workbook.Sheets;
+        var sheets = _excelApp.Workbook.Worksheets;
         var sheetNames = new List<string>();
 
-        foreach (Excel.Worksheet sheet in sheets)
+        foreach (var sheet in sheets)
         {
             sheetNames.Add(sheet.Name);
         }
-
-        Marshal.ReleaseComObject(sheets);
 
         return sheetNames;
     }
@@ -115,98 +104,78 @@ public class ImportSpreadsheetViewModel : ObservableObject, IDisposable
         return initial;
     }
 
+    private (int, int) GetRowAndColumn(string cell)
+    {
+        // get the column from the cell string e.g. B3 => (3, 2)
+        var regex = new Regex(@"([A-Z]+)(\d+)");
+        var match = regex.Match(cell);
+        var column = match.Groups[1].Value;
+        var row = match.Groups[2].Value;
+
+        // convert column to number e.g. A => 1, B => 2, AA => 27
+        column = column.ToUpper();
+        var sum = 0;
+        for (int i = 0; i < column.Length; i++)
+        {
+            var c = column[i];
+            var value = c - 'A' + 1;
+            sum += value * (int)Math.Pow(26, column.Length - i - 1);
+        }
+
+        return (Convert.ToInt32(row), sum);
+    }
+
     private void Import()
     {
-        var inventorySheet = _workbook.Sheets[InventorySheetName];
-        var inventoryRange = inventorySheet.Range[InventoryCellRange.StartCell, InventoryCellRange.EndCell];
-        var inventoryValues = inventoryRange.Value;
+        var inventorySheet = _excelApp.Workbook.Worksheets[InventorySheetName];
+        var inventoryStartCell = GetRowAndColumn(InventoryCellRange.StartCell);
+        var inventoryEndCell = GetRowAndColumn(InventoryCellRange.EndCell);
 
         var inventory = new List<Item>();
-        for (int i = 1; i < inventoryValues.GetLength(0); i++)
+        for (int i = inventoryStartCell.Item1; i <= inventoryEndCell.Item1; i++)
         {
+            var baseColumn = inventoryStartCell.Item2;
             var item = new Item
             {
-                Id = Convert.ToInt32(inventoryValues[i, 1]),
-                Name = inventoryValues[i, 2],
-                Description = inventoryValues[i, 3],
-                Quantity = Convert.ToInt32(inventoryValues[i, 4]),
-                Price = Convert.ToDecimal(inventoryValues[i, 5])
+                Id = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 0].Value),
+                Name = Convert.ToString(inventorySheet.Cells[i, baseColumn + 1].Value),
+                Description = Convert.ToString(inventorySheet.Cells[i, baseColumn + 2].Value),
+                Quantity = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 3].Value),
+                Price = Convert.ToDecimal(inventorySheet.Cells[i, baseColumn + 4].Value)
             };
             inventory.Add(item);
         }
 
         InventorySingletonViewModel.Items = new ObservableCollectionWithItemNotify<Item>(inventory);
 
-        Marshal.ReleaseComObject(inventorySheet);
-
-        if (!IncludeTransactions)
-            return;
-
-        var transactionSheet = _workbook.Sheets[TransactionSheetName];
-        var transactionRange = transactionSheet.Range[TransactionCellRange.StartCell, TransactionCellRange.EndCell];
-        var transactionValues = transactionRange.Value;
-
-        var transactions = new List<Transaction>();
-        for (int i = 1; i < transactionValues.GetLength(0); i++)
+        if (IncludeTransactions)
         {
-            var itemId = Convert.ToInt32(transactionValues[i, 3]);
-            var item = inventory.Find(item => item.Id == itemId);
-            transactions.Add(new Transaction
+            var transactionSheet = _excelApp.Workbook.Worksheets[TransactionSheetName];
+            var transactionStartCell = GetRowAndColumn(TransactionCellRange.StartCell);
+            var transactionEndCell = GetRowAndColumn(TransactionCellRange.EndCell);
+
+            var transactions = new List<Transaction>();
+            for (int i = transactionStartCell.Item1; i <= transactionEndCell.Item1; i++)
             {
-                Id = Guid.Parse(transactionValues[i, 1]),
-                Date = DateTime.Parse(transactionValues[i, 2]),
-                Item = item,
-                StockIn = Convert.ToInt32(transactionValues[i, 4]),
-                StockOut = Convert.ToInt32(transactionValues[i, 5]),
-                Status = (TransactionStatus)Enum.Parse(typeof(TransactionStatus), transactionValues[i, 6]),
-                TotalPrice = Convert.ToDecimal(transactionValues[i, 7]),
-                Notes = transactionValues[i, 8] ?? string.Empty
-            });
-        }
-
-        TransactionsSingletonViewModel.Transactions = new ObservableCollectionWithItemNotify<Transaction>(transactions);
-
-        Marshal.ReleaseComObject(transactionSheet);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                // TODO: dispose managed state (managed objects)
+                var baseColumn = transactionStartCell.Item2;
+                var itemId = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 2].Value);
+                var transaction = new Transaction
+                {
+                    Id = Guid.Parse(Convert.ToString(transactionSheet.Cells[i, baseColumn + 0].Value)),
+                    Date = DateTime.Parse(Convert.ToString(transactionSheet.Cells[i, baseColumn + 1].Value)),
+                    Item = inventory.First(item => item.Id == itemId),
+                    StockIn = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 3].Value),
+                    StockOut = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 4].Value),
+                    Status = (TransactionStatus)Enum.Parse(typeof(TransactionStatus), Convert.ToString(transactionSheet.Cells[i, baseColumn + 5].Value)),
+                    TotalPrice = Convert.ToDecimal(transactionSheet.Cells[i, baseColumn + 6].Value),
+                    Notes = Convert.ToString(transactionSheet.Cells[i, baseColumn + 7].Value)
+                };
+                transactions.Insert(0, transaction);
             }
 
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
-            _disposedValue = true;
-
-            if (_workbook != null)
-            {
-                _workbook.Close();
-                Marshal.ReleaseComObject(_workbook);
-            }
-
-            _workbooks.Close();
-            _excelApp.Quit();
-
-            Marshal.ReleaseComObject(_workbooks);
-            Marshal.ReleaseComObject(_excelApp);
+            TransactionsSingletonViewModel.Transactions = new ObservableCollectionWithItemNotify<Transaction>(transactions);
         }
-    }
 
-    // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-    ~ImportSpreadsheetViewModel()
-    {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose(disposing: false);
-    }
-
-    public void Dispose()
-    {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        _excelApp?.Dispose();
     }
 }

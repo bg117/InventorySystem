@@ -97,7 +97,7 @@ public class AddTransactionViewModel : ObservableObject
             Notes = Notes
         };
 
-        TransactionsSingletonInstance.Transactions.Add(transaction);
+        TransactionsSingletonInstance.Transactions.Insert(0, transaction);
 
         MaximumStock -= StockOut - StockIn;
 

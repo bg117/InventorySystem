@@ -13,7 +13,7 @@
     </mah:MetroWindow.DataContext>
     <StackPanel Orientation="Vertical" Margin="8">
         <mah:MetroHeader Header="Add new item" mah:HeaderedControlHelper.HeaderFontSize="24" mah:HeaderedControlHelper.HeaderVerticalContentAlignment="Top" mah:HeaderedControlHelper.HeaderMargin="0 0 0 8"/>
-        <Grid Margin="0 0 0 4">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" MinWidth="256"/>
@@ -24,20 +24,31 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0">Name</Label>
-            <TextBox Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"/>
-            <Label Grid.Row="1" Grid.Column="0">Description</Label>
-            <TextBox Text="{Binding Description,Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
-            <Label Grid.Row="2" Grid.Column="0">Quantity</Label>
-            <mah:NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Quantity,Mode=TwoWay}" Minimum="1"/>
-            <Label Grid.Row="3" Grid.Column="0">Price</Label>
-            <mah:NumericUpDown DecimalPointCorrection="Currency" StringFormat="₱{0:#,#0.00}" Grid.Row="3" Grid.Column="1" Value="{Binding Price,Mode=TwoWay}" Minimum="0"/>
+
+            <Label Margin="0 0 0 4" Grid.Row="0" Grid.Column="0">Name</Label>
+            <TextBox Margin="0 0 0 4" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"/>
+
+            <Label Margin="0 0 0 4" Grid.Row="1" Grid.Column="0">Description</Label>
+            <TextBox Margin="0 0 0 4" Text="{Binding Description,Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+
+            <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="0">Quantity</Label>
+            <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Value="{Binding Quantity,Mode=TwoWay}" Minimum="1"/>
+
+            <Label Margin="0 0 0 4" Grid.Row="3" Grid.Column="0">Price</Label>
+            <mah:NumericUpDown Margin="0 0 0 4" DecimalPointCorrection="Currency" StringFormat="₱{0:#,#0.00}" Grid.Row="3" Grid.Column="1" Value="{Binding Price,Mode=TwoWay}" Minimum="0"/>
         </Grid>
-        <Button Command="{Binding AddItemCommand}">
-            <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconMaterial Kind="Plus"/>
-                <TextBlock Margin="4 0">Add item</TextBlock>
-            </StackPanel>
+        <Button Command="{Binding AddItemCommand}" Content="Add item" Style="{StaticResource MahApps.Styles.Button.Dialogs}">
+            <Button.ContentTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Plus"
+                                            VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding}"
+                            Margin="4 0"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </Button.ContentTemplate>
         </Button>
     </StackPanel>
 

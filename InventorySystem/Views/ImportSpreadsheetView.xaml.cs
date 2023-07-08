@@ -45,13 +45,5 @@ namespace InventorySystem.Views
                 viewModel.FilePath = dialog.FileName;
             }
         }
-
-        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (DataContext is ImportSpreadsheetViewModel viewModel)
-            {
-                viewModel.Dispose();
-            }
-        }
     }
 }

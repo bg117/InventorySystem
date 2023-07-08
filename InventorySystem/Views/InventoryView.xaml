@@ -16,23 +16,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 8">
-            <Button Click="AddItem_OnClick" Margin="0 0 4 0">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="Plus"/>
-                    <TextBlock Margin="4 0">Add item</TextBlock>
-                </StackPanel>
+            <StackPanel.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Circle}">
+                    <Setter Property="Margin" Value="0 0 8 0"/>
+                    <Setter Property="Padding" Value="8" />
+                </Style>
+            </StackPanel.Resources>
+            <Button Click="AddItem_OnClick">
+                <iconPacks:PackIconMaterial Kind="Plus" />
             </Button>
-            <Button IsEnabled="{Binding HasSelected}" Click="EditSelected_OnClick" Margin="0 0 4 0">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="Pencil"/>
-                    <TextBlock Margin="4 0">Edit selected</TextBlock>
-                </StackPanel>
+            <Button IsEnabled="{Binding HasSelected}" Click="EditSelected_OnClick">
+                <iconPacks:PackIconMaterial Kind="Pencil"/>
             </Button>
             <Button Command="{Binding RemoveSelectedCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="TrashCan"/>
-                    <TextBlock Margin="4 0">Remove selected</TextBlock>
-                </StackPanel>
+                <iconPacks:PackIconMaterial Kind="TrashCan"/>
             </Button>
         </StackPanel>
         <ListView Grid.Row="1" x:Name="InventoryListView" ItemsSource="{Binding InventorySingletonInstance.Items}" SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">
