@@ -55,7 +55,7 @@
                     <Label>starts at</Label>
                     <TextBox MinWidth="32"
                              Text="{Binding InventoryStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <Label>, consists of</Label>
+                    <Label>with</Label>
                     <mah:NumericUpDown Minimum="1" MinWidth="32" Value="{Binding InventoryRows,Mode=TwoWay}" />
                     <Label>rows</Label>
                 </StackPanel>
@@ -108,7 +108,7 @@
                     <TextBox IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}"
                              MinWidth="32"
                              Text="{Binding TransactionStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">, consists of</Label>
+                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">with</Label>
                     <mah:NumericUpDown IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}"
                                        Minimum="1" MinWidth="32" Value="{Binding TransactionRows,Mode=TwoWay}" />
                     <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">rows</Label>
