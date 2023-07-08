@@ -9,7 +9,7 @@ using InventorySystem.Models;
 
 namespace InventorySystem.ViewModels;
 
-public class TransactionsViewModel : ObservableObject
+public class TransactionsViewModel : ViewModelBase
 {
     public TransactionsSingletonViewModel TransactionsSingletonInstance => TransactionsSingletonViewModel.Instance;
 

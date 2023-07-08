@@ -23,6 +23,11 @@ namespace InventorySystem.Views
         public ImportSpreadsheetView()
         {
             InitializeComponent();
+
+            if (DataContext is ImportSpreadsheetViewModel viewModel)
+            {
+                viewModel.SpreadsheetImported += ViewModel_SpreadsheetImported;
+            }
         }
 
         private void Browse_OnClick(object sender, RoutedEventArgs e)
@@ -44,6 +49,11 @@ namespace InventorySystem.Views
             {
                 viewModel.FilePath = dialog.FileName;
             }
+        }
+
+        private void ViewModel_SpreadsheetImported()
+        {
+            Close();
         }
     }
 }

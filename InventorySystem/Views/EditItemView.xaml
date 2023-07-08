@@ -34,7 +34,7 @@
             <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Value="{Binding Quantity,Mode=TwoWay}" Minimum="1"/>
 
             <Label Margin="0 0 0 4" Grid.Row="3" Grid.Column="0">Price</Label>
-            <mah:NumericUpDown Margin="0 0 0 4" DecimalPointCorrection="Currency" Grid.Row="3" Grid.Column="1" Value="{Binding Price,Mode=TwoWay}" Minimum="0"/>
+            <mah:NumericUpDown Margin="0 0 0 4" DecimalPointCorrection="Currency" StringFormat="₱{0:#,#0.00}" Grid.Row="3" Grid.Column="1" Value="{Binding Price,Mode=TwoWay}" Minimum="0"/>
         </Grid>
         <Button Command="{Binding UpdateItemCommand}" Content="Update" Style="{StaticResource MahApps.Styles.Button.Dialogs}">
             <i:Interaction.Triggers>

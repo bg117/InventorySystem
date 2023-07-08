@@ -11,7 +11,7 @@ public enum TransactionStatus
     Failed
 }
 
-public class Transaction : ObservableObject
+public class Transaction : ViewModelBase
 {
     private decimal _totalPrice;
     private Guid _id;

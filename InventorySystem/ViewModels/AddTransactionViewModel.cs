@@ -5,7 +5,7 @@ using InventorySystem.Models;
 
 namespace InventorySystem.ViewModels;
 
-public class AddTransactionViewModel : ObservableObject
+public class AddTransactionViewModel : ViewModelBase
 {
     public TransactionsSingletonViewModel TransactionsSingletonInstance => TransactionsSingletonViewModel.Instance;
     public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;

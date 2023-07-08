@@ -3,7 +3,7 @@ using InventorySystem.Models;
 
 namespace InventorySystem.ViewModels;
 
-public sealed class InventorySingletonViewModel : ObservableObject
+public sealed class InventorySingletonViewModel : ViewModelBase
 {
     private ObservableCollectionWithItemNotify<Item> _items = new();
     public ObservableCollectionWithItemNotify<Item> Items

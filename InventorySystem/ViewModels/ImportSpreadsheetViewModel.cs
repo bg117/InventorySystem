@@ -11,8 +11,12 @@ using System.Linq;
 
 namespace InventorySystem.ViewModels;
 
-public class ImportSpreadsheetViewModel : ObservableObject
+public class ImportSpreadsheetViewModel : ViewModelBase
 {
+    public event Action SpreadsheetImported;
+
+    public ErrorViewModel ErrorViewModelInstance { get; } = new();
+
     private string _filePath;
     public string FilePath
     {
@@ -25,6 +29,8 @@ public class ImportSpreadsheetViewModel : ObservableObject
             _excelApp = new ExcelPackage(new FileInfo(FilePath));
 
             SheetNames = GetSheetNames();
+
+            ErrorViewModelInstance.HasError = false;
         }
     }
 
@@ -42,11 +48,18 @@ public class ImportSpreadsheetViewModel : ObservableObject
         set => SetField(ref _inventorySheetName, value);
     }
 
-    private CellRange _inventoryCellRange = new();
-    public CellRange InventoryCellRange
+    private string _inventoryStartCell;
+    public string InventoryStartCell
     {
-        get => _inventoryCellRange;
-        set => SetField(ref _inventoryCellRange, value);
+        get => _inventoryStartCell;
+        set => SetField(ref _inventoryStartCell, value);
+    }
+
+    private int _inventoryRows = 1;
+    public int InventoryRows
+    {
+        get => _inventoryRows;
+        set => SetField(ref _inventoryRows, value);
     }
 
     private bool _includeTransactions = true;
@@ -63,11 +76,18 @@ public class ImportSpreadsheetViewModel : ObservableObject
         set => SetField(ref _transactionSheetName, value);
     }
 
-    private CellRange _transactionCellRange = new();
-    public CellRange TransactionCellRange
+    private string _transactionStartCell;
+    public string TransactionStartCell
     {
-        get => _transactionCellRange;
-        set => SetField(ref _transactionCellRange, value);
+        get => _transactionStartCell;
+        set => SetField(ref _transactionStartCell, value);
+    }
+
+    private int _transactionRows = 1;
+    public int TransactionRows
+    {
+        get => _transactionRows;
+        set => SetField(ref _transactionRows, value);
     }
 
     private ExcelPackage _excelApp;
@@ -86,19 +106,19 @@ public class ImportSpreadsheetViewModel : ObservableObject
     }
 
     private ICommand _importCommand;
-    private bool _disposedValue;
 
     public ICommand ImportCommand => _importCommand ??= new RelayCommand(Import, CanImport);
 
     private InventorySingletonViewModel InventorySingletonViewModel => InventorySingletonViewModel.Instance;
     private TransactionsSingletonViewModel TransactionsSingletonViewModel => TransactionsSingletonViewModel.Instance;
 
+
     private bool CanImport()
     {
-        var initial = !string.IsNullOrWhiteSpace(FilePath) && !string.IsNullOrWhiteSpace(InventorySheetName) && InventoryCellRange != null;
+        var initial = !string.IsNullOrWhiteSpace(FilePath) && !string.IsNullOrWhiteSpace(InventorySheetName) && !string.IsNullOrWhiteSpace(InventoryStartCell) && InventoryRows > 0;
         if (IncludeTransactions)
         {
-            initial = initial && !string.IsNullOrWhiteSpace(TransactionSheetName) && TransactionCellRange != null;
+            initial = initial && !string.IsNullOrWhiteSpace(TransactionSheetName) && !string.IsNullOrWhiteSpace(TransactionStartCell) && TransactionRows > 0;
         }
 
         return initial;
@@ -127,23 +147,36 @@ public class ImportSpreadsheetViewModel : ObservableObject
 
     private void Import()
     {
+        if (_excelApp == null)
+        {
+            _excelApp = new ExcelPackage(new FileInfo(FilePath));
+        }
+
         var inventorySheet = _excelApp.Workbook.Worksheets[InventorySheetName];
-        var inventoryStartCell = GetRowAndColumn(InventoryCellRange.StartCell);
-        var inventoryEndCell = GetRowAndColumn(InventoryCellRange.EndCell);
+        var inventoryStartCell = GetRowAndColumn(InventoryStartCell);
 
         var inventory = new List<Item>();
-        for (int i = inventoryStartCell.Item1; i <= inventoryEndCell.Item1; i++)
+        for (int i = inventoryStartCell.Item1; i < inventoryStartCell.Item1 + InventoryRows; i++)
         {
-            var baseColumn = inventoryStartCell.Item2;
-            var item = new Item
+            try
             {
-                Id = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 0].Value),
-                Name = Convert.ToString(inventorySheet.Cells[i, baseColumn + 1].Value),
-                Description = Convert.ToString(inventorySheet.Cells[i, baseColumn + 2].Value),
-                Quantity = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 3].Value),
-                Price = Convert.ToDecimal(inventorySheet.Cells[i, baseColumn + 4].Value)
-            };
-            inventory.Add(item);
+                var baseColumn = inventoryStartCell.Item2;
+                var item = new Item
+                {
+                    Id = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 0].Value),
+                    Name = Convert.ToString(inventorySheet.Cells[i, baseColumn + 1].Value),
+                    Description = Convert.ToString(inventorySheet.Cells[i, baseColumn + 2].Value),
+                    Quantity = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 3].Value),
+                    Price = Convert.ToDecimal(inventorySheet.Cells[i, baseColumn + 4].Value)
+                };
+                inventory.Add(item);
+            }
+            catch (Exception e)
+            {
+                ErrorViewModelInstance.Error = $"Error at row {i}: {e.Message}";
+                ErrorViewModelInstance.HasError = true;
+                return;
+            }
         }
 
         InventorySingletonViewModel.Items = new ObservableCollectionWithItemNotify<Item>(inventory);
@@ -151,31 +184,44 @@ public class ImportSpreadsheetViewModel : ObservableObject
         if (IncludeTransactions)
         {
             var transactionSheet = _excelApp.Workbook.Worksheets[TransactionSheetName];
-            var transactionStartCell = GetRowAndColumn(TransactionCellRange.StartCell);
-            var transactionEndCell = GetRowAndColumn(TransactionCellRange.EndCell);
+            var transactionStartCell = GetRowAndColumn(TransactionStartCell);
 
             var transactions = new List<Transaction>();
-            for (int i = transactionStartCell.Item1; i <= transactionEndCell.Item1; i++)
+            for (int i = transactionStartCell.Item1; i < transactionStartCell.Item1 + TransactionRows; i++)
             {
-                var baseColumn = transactionStartCell.Item2;
-                var itemId = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 2].Value);
-                var transaction = new Transaction
+                try
                 {
-                    Id = Guid.Parse(Convert.ToString(transactionSheet.Cells[i, baseColumn + 0].Value)),
-                    Date = DateTime.Parse(Convert.ToString(transactionSheet.Cells[i, baseColumn + 1].Value)),
-                    Item = inventory.First(item => item.Id == itemId),
-                    StockIn = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 3].Value),
-                    StockOut = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 4].Value),
-                    Status = (TransactionStatus)Enum.Parse(typeof(TransactionStatus), Convert.ToString(transactionSheet.Cells[i, baseColumn + 5].Value)),
-                    TotalPrice = Convert.ToDecimal(transactionSheet.Cells[i, baseColumn + 6].Value),
-                    Notes = Convert.ToString(transactionSheet.Cells[i, baseColumn + 7].Value)
-                };
-                transactions.Insert(0, transaction);
+                    var baseColumn = transactionStartCell.Item2;
+                    var itemId = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 2].Value);
+                    var transaction = new Transaction
+                    {
+                        Id = Guid.Parse(Convert.ToString(transactionSheet.Cells[i, baseColumn + 0].Value)),
+                        Date = DateTime.Parse(Convert.ToString(transactionSheet.Cells[i, baseColumn + 1].Value)),
+                        Item = inventory.First(item => item.Id == itemId),
+                        StockIn = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 3].Value),
+                        StockOut = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 4].Value),
+                        Status = (TransactionStatus)Enum.Parse(typeof(TransactionStatus), Convert.ToString(transactionSheet.Cells[i, baseColumn + 5].Value)),
+                        TotalPrice = Convert.ToDecimal(transactionSheet.Cells[i, baseColumn + 6].Value),
+                        Notes = Convert.ToString(transactionSheet.Cells[i, baseColumn + 7].Value)
+                    };
+                    transactions.Insert(0, transaction);
+                }
+                catch (Exception e)
+                {
+                    ErrorViewModelInstance.Error = $"Error at row {i}: {e.Message}";
+                    ErrorViewModelInstance.HasError = true;
+                    return;
+                }
             }
 
             TransactionsSingletonViewModel.Transactions = new ObservableCollectionWithItemNotify<Transaction>(transactions);
         }
 
-        _excelApp?.Dispose();
+        ErrorViewModelInstance.HasError = false;
+
+        _excelApp.Dispose();
+        _excelApp = null;
+
+        SpreadsheetImported?.Invoke();
     }
 }

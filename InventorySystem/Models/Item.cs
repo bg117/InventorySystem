@@ -2,7 +2,7 @@
 
 namespace InventorySystem.Models;
 
-public class Item : ObservableObject
+public class Item : ViewModelBase
 {
     private int _id;
     public int Id

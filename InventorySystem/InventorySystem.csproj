@@ -185,12 +185,12 @@
     </ApplicationDefinition>
     <Compile Include="Common\ObservableCollectionWithItemNotify.cs" />
     <Compile Include="Common\RelayCommand.cs" />
-    <Compile Include="Common\ObservableObject.cs" />
+    <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Converters\ItemToProductNameConverter.cs" />
     <Compile Include="ViewModels\AddItemViewModel.cs" />
     <Compile Include="ViewModels\AddTransactionViewModel.cs" />
-    <Compile Include="Models\CellRange.cs" />
     <Compile Include="ViewModels\EditItemViewModel.cs" />
+    <Compile Include="ViewModels\ErrorViewModel.cs" />
     <Compile Include="ViewModels\ImportSpreadsheetViewModel.cs" />
     <Compile Include="ViewModels\InventorySingletonViewModel.cs" />
     <Compile Include="ViewModels\InventoryViewModel.cs" />

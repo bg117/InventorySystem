@@ -10,6 +10,9 @@
     <mah:MetroWindow.DataContext>
         <viewmodels:ImportSpreadsheetViewModel />
     </mah:MetroWindow.DataContext>
+    <mah:MetroWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </mah:MetroWindow.Resources>
     <StackPanel Orientation="Vertical" Margin="8">
         <Grid>
             <Grid.RowDefinitions>
@@ -35,11 +38,13 @@
             <Label Margin="0 0 0 4" Grid.Row="1" Grid.Column="0">Inventory Worksheet</Label>
             <ComboBox Margin="0 0 0 4" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SheetNames,UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding InventorySheetName,Mode=TwoWay}" />
 
-            <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="0">Inventory Range</Label>
+            <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="0">Inventory Table</Label>
             <StackPanel Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                <TextBox MinWidth="32" Text="{Binding InventoryCellRange.StartCell,Mode=TwoWay}" />
-                <Label>to</Label>
-                <TextBox MinWidth="32" Text="{Binding InventoryCellRange.EndCell,Mode=TwoWay}" />
+                <Label>starts at</Label>
+                <TextBox MinWidth="32" Text="{Binding InventoryStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                <Label>, consists of</Label>
+                <mah:NumericUpDown Minimum="1" MinWidth="32" Value="{Binding InventoryRows,Mode=TwoWay}" />
+                <Label>rows</Label>
             </StackPanel>
 
             <Separator Margin="0 0 0 4" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
@@ -51,20 +56,16 @@
 
             <Label Margin="0 0 0 4" Grid.Row="6" Grid.Column="0" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >Transaction Range</Label>
             <StackPanel Margin="0 0 0 4" Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                <TextBox MinWidth="32" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Text="{Binding TransactionCellRange.StartCell,Mode=TwoWay}" />
-                <Label>to</Label>
-                <TextBox MinWidth="32" IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Text="{Binding TransactionCellRange.EndCell,Mode=TwoWay}" />
+                <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">starts at</Label>
+                <TextBox IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" MinWidth="32" Text="{Binding TransactionStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >, consists of</Label>
+                <mah:NumericUpDown IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" Minimum="1" MinWidth="32" Value="{Binding TransactionRows,Mode=TwoWay}" />
+                <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" >rows</Label>
             </StackPanel>
         </Grid>
+        <!-- Error -->
+        <TextBlock Text="{Binding ErrorViewModelInstance.Error,UpdateSourceTrigger=PropertyChanged}" Foreground="Red" Visibility="{Binding ErrorViewModelInstance.HasError,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BooleanToVisibilityConverter}}" />
         <Button Command="{Binding ImportCommand}" Content="Import" Style="{StaticResource MahApps.Styles.Button.Dialogs}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <i:CallMethodAction MethodName="Close"
-                                                    TargetObject="{Binding RelativeSource={RelativeSource
-                                                                   Mode=FindAncestor,
-                                                                   AncestorType=Window}}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
             <Button.ContentTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

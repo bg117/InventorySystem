@@ -4,7 +4,7 @@ using InventorySystem.Models;
 
 namespace InventorySystem.ViewModels;
 
-public class AddItemViewModel : ObservableObject
+public class AddItemViewModel : ViewModelBase
 {
     public InventorySingletonViewModel InventorySingletonInstance => InventorySingletonViewModel.Instance;
 

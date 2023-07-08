@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace InventorySystem.Common;
 
-public abstract class ObservableObject : INotifyPropertyChanged
+public abstract class ViewModelBase : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
 
