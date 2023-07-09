@@ -8,7 +8,7 @@
                  xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
                  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                  mc:Ignorable="d"
-                 Height="Auto" Width="Auto" Title="Add item" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+                 Height="Auto" Width="Auto" Title="Edit item" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
                  WindowStyle="ToolWindow">
     <mah:MetroWindow.DataContext>
         <viewModels:EditItemViewModel />

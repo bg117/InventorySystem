@@ -21,6 +21,11 @@
                             <MenuItem Header="Spreadsheet" Click="FileImportSpreadsheet_OnClick" />
                         </MenuItem.Items>
                     </MenuItem>
+                    <MenuItem Header="Export...">
+                        <MenuItem.Items>
+                            <MenuItem Header="Spreadsheet" Click="FileExportSpreadsheet_OnClick" />
+                        </MenuItem.Items>
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="Exit" InputGestureText="Alt+F4">
                         <b:Interaction.Triggers>

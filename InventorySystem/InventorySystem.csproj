@@ -186,11 +186,13 @@
     <Compile Include="Common\ObservableCollectionWithItemNotify.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
+    <Compile Include="Converters\ExcelTableToStringConverter.cs" />
     <Compile Include="Converters\ItemToProductNameConverter.cs" />
     <Compile Include="ViewModels\AddItemViewModel.cs" />
     <Compile Include="ViewModels\AddTransactionViewModel.cs" />
     <Compile Include="ViewModels\EditItemViewModel.cs" />
     <Compile Include="ViewModels\ErrorViewModel.cs" />
+    <Compile Include="ViewModels\ExportSpreadsheetViewModel.cs" />
     <Compile Include="ViewModels\ImportSpreadsheetViewModel.cs" />
     <Compile Include="ViewModels\InventorySingletonViewModel.cs" />
     <Compile Include="ViewModels\InventoryViewModel.cs" />
@@ -204,6 +206,9 @@
     </Compile>
     <Compile Include="Views\AddItemView.xaml.cs">
       <DependentUpon>AddItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExportSpreadsheetView.xaml.cs">
+      <DependentUpon>ExportSpreadsheetView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImportSpreadsheetView.xaml.cs">
       <DependentUpon>ImportSpreadsheetView.xaml</DependentUpon>
@@ -238,6 +243,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AddItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExportSpreadsheetView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

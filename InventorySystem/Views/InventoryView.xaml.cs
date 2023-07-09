@@ -35,6 +35,10 @@ public partial class InventoryView : UserControl
         if (DataContext is not InventoryViewModel viewModel)
             return;
 
-        foreach (var item in viewModel.SelectedItems) new EditItemView(item).Show();
+        foreach (var item in viewModel.SelectedItems)
+        {
+            var editItemView = new EditItemView(item);
+            editItemView.ShowDialog();
+        }
     }
 }

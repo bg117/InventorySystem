@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 using InventorySystem.Common;
 using InventorySystem.Models;
 using OfficeOpenXml;
+using OfficeOpenXml.Table;
 
 namespace InventorySystem.ViewModels;
 
@@ -20,19 +20,19 @@ public class ImportSpreadsheetViewModel : ViewModelBase
 
     private bool _includeTransactions = true;
 
-    private int _inventoryRows = 1;
-
     private string _inventorySheetName;
 
-    private string _inventoryStartCell;
+    private ExcelTable _inventoryTable;
+
+    private IEnumerable<ExcelTable> _inventoryTables;
 
     private IEnumerable<string> _sheetNames;
 
-    private int _transactionRows = 1;
-
     private string _transactionSheetName;
 
-    private string _transactionStartCell;
+    private ExcelTable _transactionTable;
+
+    private IEnumerable<ExcelTable> _transactionTables;
 
     public ErrorViewModel ErrorViewModelInstance { get; } = new();
 
@@ -47,8 +47,6 @@ public class ImportSpreadsheetViewModel : ViewModelBase
             _excelApp = new ExcelPackage(new FileInfo(FilePath));
 
             SheetNames = GetSheetNames();
-
-            ErrorViewModelInstance.HasError = false;
         }
     }
 
@@ -61,19 +59,23 @@ public class ImportSpreadsheetViewModel : ViewModelBase
     public string InventorySheetName
     {
         get => _inventorySheetName;
-        set => SetField(ref _inventorySheetName, value);
+        set
+        {
+            SetField(ref _inventorySheetName, value);
+            InventoryTables = GetTables(InventorySheetName, 5);
+        }
     }
 
-    public string InventoryStartCell
+    public IEnumerable<ExcelTable> InventoryTables
     {
-        get => _inventoryStartCell;
-        set => SetField(ref _inventoryStartCell, value);
+        get => _inventoryTables;
+        private set => SetField(ref _inventoryTables, value);
     }
 
-    public int InventoryRows
+    public ExcelTable InventoryTable
     {
-        get => _inventoryRows;
-        set => SetField(ref _inventoryRows, value);
+        get => _inventoryTable;
+        set => SetField(ref _inventoryTable, value);
     }
 
     public bool IncludeTransactions
@@ -85,19 +87,23 @@ public class ImportSpreadsheetViewModel : ViewModelBase
     public string TransactionSheetName
     {
         get => _transactionSheetName;
-        set => SetField(ref _transactionSheetName, value);
+        set
+        {
+            SetField(ref _transactionSheetName, value);
+            TransactionTables = GetTables(TransactionSheetName, 8);
+        }
     }
 
-    public string TransactionStartCell
+    public IEnumerable<ExcelTable> TransactionTables
     {
-        get => _transactionStartCell;
-        set => SetField(ref _transactionStartCell, value);
+        get => _transactionTables;
+        private set => SetField(ref _transactionTables, value);
     }
 
-    public int TransactionRows
+    public ExcelTable TransactionTable
     {
-        get => _transactionRows;
-        set => SetField(ref _transactionRows, value);
+        get => _transactionTable;
+        set => SetField(ref _transactionTable, value);
     }
 
     public ICommand ImportCommand => _importCommand ??= new RelayCommand(Import, CanImport);
@@ -107,12 +113,13 @@ public class ImportSpreadsheetViewModel : ViewModelBase
     private bool CanImport()
     {
         var initial = !string.IsNullOrWhiteSpace(FilePath) && !string.IsNullOrWhiteSpace(InventorySheetName) &&
-                      !string.IsNullOrWhiteSpace(InventoryStartCell) && InventoryRows > 0;
+                      InventoryTables.Any() &&
+                      InventoryTable != null;
 
         if (IncludeTransactions)
         {
-            initial = initial && !string.IsNullOrWhiteSpace(TransactionSheetName) &&
-                      !string.IsNullOrWhiteSpace(TransactionStartCell) && TransactionRows > 0;
+            initial = initial && !string.IsNullOrWhiteSpace(TransactionSheetName) && TransactionTables.Any() &&
+                      TransactionTable != null;
         }
 
         return initial;
@@ -123,11 +130,16 @@ public class ImportSpreadsheetViewModel : ViewModelBase
         _excelApp ??= new ExcelPackage(new FileInfo(FilePath));
 
         var inventory = ImportInventory();
+
+        if (ErrorViewModelInstance.HasError) return;
+
         InventorySingletonViewModel.Instance.Items = new ObservableCollectionWithItemNotify<Item>(inventory);
 
         if (IncludeTransactions)
         {
             var transactions = ImportTransactions(inventory);
+
+            if (ErrorViewModelInstance.HasError) return;
 
             TransactionsSingletonViewModel.Instance.Transactions =
                 new ObservableCollectionWithItemNotify<Transaction>(transactions);
@@ -143,15 +155,15 @@ public class ImportSpreadsheetViewModel : ViewModelBase
 
     private IEnumerable<Transaction> ImportTransactions(IReadOnlyCollection<Item> inventory)
     {
-        var transactionSheet = _excelApp.Workbook.Worksheets[TransactionSheetName];
-        var transactionStartCell = GetRowAndColumn(TransactionStartCell);
-
         var transactions = new List<Transaction>();
-        for (var i = transactionStartCell.Item1; i < transactionStartCell.Item1 + TransactionRows; i++)
+        var transactionSheet = _excelApp.Workbook.Worksheets[TransactionSheetName];
+        var tableRange = TransactionTable.Range;
+        var startRow = TransactionTable.ShowHeader ? tableRange.Start.Row + 1 : tableRange.Start.Row;
+        for (var i = startRow; i <= tableRange.End.Row; i++)
         {
             try
             {
-                var baseColumn = transactionStartCell.Item2;
+                var baseColumn = tableRange.Start.Column;
                 var itemId = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 2].Value);
                 var transaction = new Transaction
                 {
@@ -180,15 +192,15 @@ public class ImportSpreadsheetViewModel : ViewModelBase
 
     private List<Item> ImportInventory()
     {
-        var inventorySheet = _excelApp.Workbook.Worksheets[InventorySheetName];
-        var inventoryStartCell = GetRowAndColumn(InventoryStartCell);
-
         var inventory = new List<Item>();
-        for (var i = inventoryStartCell.Item1; i < inventoryStartCell.Item1 + InventoryRows; i++)
+        var inventorySheet = _excelApp.Workbook.Worksheets[InventorySheetName];
+        var tableRange = InventoryTable.Range;
+        var startRow = InventoryTable.ShowHeader ? tableRange.Start.Row + 1 : tableRange.Start.Row;
+        for (var i = startRow; i <= tableRange.End.Row; i++)
         {
             try
             {
-                var baseColumn = inventoryStartCell.Item2;
+                var baseColumn = tableRange.Start.Column;
                 var item = new Item
                 {
                     Id = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 0].Value),
@@ -216,19 +228,9 @@ public class ImportSpreadsheetViewModel : ViewModelBase
         return sheets.Select(sheet => sheet.Name).ToList();
     }
 
-    private static (int, int) GetRowAndColumn(string cell)
+    private IEnumerable<ExcelTable> GetTables(string sheetName, int columnCount)
     {
-        // get the column from the cell string e.g. B3 => (3, 2)
-        var regex = new Regex(@"([A-Z]+)(\d+)");
-        var match = regex.Match(cell);
-        var column = match.Groups[1].Value;
-        var row = match.Groups[2].Value;
-
-        // convert column to number e.g. A => 1, B => 2, AA => 27
-        column = column.ToUpper();
-        var sum = column.Select(c => c - 'A' + 1).Select((value, i) => value * (int)Math.Pow(26, column.Length - i - 1))
-            .Sum();
-
-        return (Convert.ToInt32(row), sum);
+        var sheet = _excelApp.Workbook.Worksheets[sheetName];
+        return sheet.Tables.Where(table => table.Columns.Count == columnCount);
     }
 }

@@ -17,4 +17,9 @@ public partial class MainView
         var importSpreadsheetView = new ImportSpreadsheetView();
         importSpreadsheetView.ShowDialog();
     }
+
+    private void FileExportSpreadsheet_OnClick(object sender, RoutedEventArgs e)
+    {
+        throw new System.NotImplementedException();
+    }
 }
