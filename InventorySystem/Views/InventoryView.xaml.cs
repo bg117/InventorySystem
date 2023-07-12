@@ -9,7 +9,7 @@ namespace InventorySystem.Views;
 /// <summary>
 ///     Interaction logic for InventoryView.xaml
 /// </summary>
-public partial class InventoryView : UserControl
+public partial class InventoryView
 {
     public InventoryView()
     {
@@ -18,7 +18,8 @@ public partial class InventoryView : UserControl
 
     private void AddItem_OnClick(object sender, RoutedEventArgs e)
     {
-        new AddItemView().Show();
+        var addItemView = new AddItemView();
+        addItemView.ShowDialog();
     }
 
     private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -26,19 +27,7 @@ public partial class InventoryView : UserControl
         if (DataContext is not InventoryViewModel viewModel)
             return;
 
-        viewModel.SelectedItems = InventoryListView.SelectedItems.Cast<Item>().ToList();
+        viewModel.SelectedItems = InventoryDataGrid.SelectedItems.Cast<Item>().ToList();
         viewModel.HasSelected = viewModel.SelectedItems.Any();
-    }
-
-    private void EditSelected_OnClick(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is not InventoryViewModel viewModel)
-            return;
-
-        foreach (var item in viewModel.SelectedItems)
-        {
-            var editItemView = new EditItemView(item);
-            editItemView.ShowDialog();
-        }
     }
 }

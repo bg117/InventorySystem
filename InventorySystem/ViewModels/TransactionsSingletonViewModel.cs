@@ -1,21 +1,17 @@
-﻿using InventorySystem.Common;
+﻿using System.Collections.ObjectModel;
 using InventorySystem.Models;
+using PostSharp.Patterns.Model;
 
 namespace InventorySystem.ViewModels;
 
-public sealed class TransactionsSingletonViewModel : ViewModelBase
+[NotifyPropertyChanged]
+public sealed class TransactionsSingletonViewModel
 {
-    private ObservableCollectionWithItemNotify<Transaction> _transactions = new();
-
     private TransactionsSingletonViewModel()
     {
     }
 
-    public ObservableCollectionWithItemNotify<Transaction> Transactions
-    {
-        get => _transactions;
-        set => SetField(ref _transactions, value);
-    }
+    [AggregateAllChanges] public ObservableCollection<Transaction> Transactions { get; set; } = new();
 
     public static TransactionsSingletonViewModel Instance { get; } = new();
 }

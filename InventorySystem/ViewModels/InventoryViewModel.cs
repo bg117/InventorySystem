@@ -2,54 +2,34 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using InventorySystem.Common;
 using InventorySystem.Models;
+using PostSharp.Patterns.Model;
+using PostSharp.Patterns.Xaml;
 
 namespace InventorySystem.ViewModels;
 
-public class InventoryViewModel : ViewModelBase
+[NotifyPropertyChanged]
+public class InventoryViewModel
 {
-    private ICommand _copyIdCommand;
+    public List<Item> SelectedItems { get; set; }
 
-    private bool _hasSelected;
+    public bool HasSelected { get; set; }
 
-    private ICommand _removeSelectedCommand;
-    private IEnumerable<Item> _selectedItems;
+    [Command] public ICommand RemoveSelectedCommand { get; }
 
-    public IEnumerable<Item> SelectedItems
-    {
-        get => _selectedItems;
-        set => SetField(ref _selectedItems, value);
-    }
+    [Command] public ICommand CopyIdCommand { get; }
 
-    public bool HasSelected
-    {
-        get => _hasSelected;
-        set => SetField(ref _hasSelected, value);
-    }
+    public bool CanExecuteRemoveSelected => SelectedItems?.Count > 0;
 
-    public ICommand RemoveSelectedCommand =>
-        _removeSelectedCommand ??= new RelayCommand(RemoveSelected, CanRemoveSelected);
+    public bool CanExecuteCopyId => SelectedItems?.Count > 0;
 
-    public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(CopyId, CanCopyId);
-
-    private void RemoveSelected()
+    public void ExecuteRemoveSelected()
     {
         foreach (var item in SelectedItems) InventorySingletonViewModel.Instance.Items.Remove(item);
     }
 
-    private bool CanRemoveSelected()
-    {
-        return SelectedItems?.Any() == true;
-    }
-
-    private void CopyId()
+    public void ExecuteCopyId()
     {
         Clipboard.SetText(string.Join("\n", SelectedItems.Select(t => t.Id.ToString())));
-    }
-
-    private bool CanCopyId()
-    {
-        return SelectedItems?.Any() == true;
     }
 }

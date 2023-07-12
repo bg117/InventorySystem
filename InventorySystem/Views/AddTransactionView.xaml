@@ -7,6 +7,7 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
                  xmlns:converters="clr-namespace:InventorySystem.Converters"
+                 xmlns:models="clr-namespace:InventorySystem.Models"
                  mc:Ignorable="d"
                  Height="Auto" Width="Auto" Title="Add transaction" SizeToContent="WidthAndHeight"
                  ResizeMode="NoResize" WindowStyle="ToolWindow">
@@ -26,6 +27,7 @@
                 <ColumnDefinition Width="*" MinWidth="256" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -62,15 +64,20 @@
             <mah:NumericUpDown Margin="0 0 0 4" Grid.Row="4" Grid.Column="1" Value="{Binding StockOut,Mode=TwoWay}"
                                Minimum="0" Maximum="{Binding MaximumStock,UpdateSourceTrigger=PropertyChanged}" />
 
-            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="0">Total Price</Label>
-            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="1"
+            <Label Margin="0 0 0 4" Grid.Row="5" Grid.Column="0">Transaction Status</Label>
+            <ComboBox Margin="0 0 0 4" Grid.Row="5" Grid.Column="1"
+                      ItemsSource="{converters:EnumToItemsSource {x:Type models:TransactionStatus}}"
+                      SelectedValue="{Binding Status,Mode=TwoWay}" />
+
+            <Label Margin="0 0 0 4" Grid.Row="6" Grid.Column="0">Total Price</Label>
+            <Label Margin="0 0 0 4" Grid.Row="6" Grid.Column="1"
                    Content="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged}"
                    ContentStringFormat="₱{0:#,#0.00}" />
 
-            <Separator Margin="0 0 0 4" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" />
+            <Separator Margin="0 0 0 4" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" />
 
-            <Label Margin="0 0 0 4" Grid.Row="7" Grid.Column="0">Notes about Transaction</Label>
-            <TextBox Margin="0 0 0 4" Grid.Row="7" Grid.Column="1"
+            <Label Margin="0 0 0 4" Grid.Row="8" Grid.Column="0">Notes about Transaction</Label>
+            <TextBox Margin="0 0 0 4" Grid.Row="8" Grid.Column="1"
                      Text="{Binding Notes,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" AcceptsReturn="True"
                      TextWrapping="Wrap" />
         </Grid>

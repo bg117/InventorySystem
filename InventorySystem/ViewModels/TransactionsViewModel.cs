@@ -2,46 +2,33 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using InventorySystem.Common;
 using InventorySystem.Models;
+using PostSharp.Patterns.Model;
+using PostSharp.Patterns.Xaml;
 
 namespace InventorySystem.ViewModels;
 
-public class TransactionsViewModel : ViewModelBase
+[NotifyPropertyChanged]
+public class TransactionsViewModel
 {
-    private ICommand _copyIdCommand;
-    private ICommand _removeSelectedCommand;
-    private IEnumerable<Transaction> _selectedTransactions;
+    public List<Transaction> SelectedTransactions { get; set; }
 
-    public IEnumerable<Transaction> SelectedTransactions
+    [Command] public ICommand RemoveSelectedCommand { get; }
+
+    [Command] public ICommand CopyIdCommand { get; }
+
+    public bool CanExecuteRemoveSelected => SelectedTransactions?.Count > 0;
+
+    public bool CanExecuteCopyId => SelectedTransactions?.Count > 0;
+
+    public void ExecuteRemoveSelected()
     {
-        get => _selectedTransactions;
-        set => SetField(ref _selectedTransactions, value);
-    }
-
-    public ICommand RemoveSelectedCommand =>
-        _removeSelectedCommand ??= new RelayCommand(RemoveSelected, CanRemoveSelected);
-
-    public ICommand CopyIdCommand => _copyIdCommand ??= new RelayCommand(CopyId, CanCopyId);
-
-    private void RemoveSelected()
-    {
-        foreach (var transaction in _selectedTransactions)
+        foreach (var transaction in SelectedTransactions)
             TransactionsSingletonViewModel.Instance.Transactions.Remove(transaction);
     }
 
-    private bool CanRemoveSelected()
-    {
-        return SelectedTransactions?.Any() == true;
-    }
-
-    private void CopyId()
+    public void ExecuteCopyId()
     {
         Clipboard.SetText(string.Join("\n", SelectedTransactions.Select(t => t.Id.ToString())));
-    }
-
-    private bool CanCopyId()
-    {
-        return SelectedTransactions?.Any() == true;
     }
 }

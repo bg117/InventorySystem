@@ -51,19 +51,16 @@
 
             <Label Margin="0 0 0 4" Grid.Row="2" Grid.Column="0">Inventory Table</Label>
             <StackPanel Margin="0 0 0 4" Grid.Row="2" Grid.Column="1" Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <Label>starts at</Label>
-                    <TextBox MinWidth="32"
-                             Text="{Binding InventoryStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <Label>with</Label>
-                    <mah:NumericUpDown Minimum="1" MinWidth="32" Value="{Binding InventoryRows,Mode=TwoWay}" />
-                    <Label>rows</Label>
-                </StackPanel>
-                <Expander Header="More information about the inventory table" Margin="0 4 0 0"
+                <ComboBox ItemsSource="{Binding InventoryTableNames,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValue="{Binding InventoryTableName,Mode=TwoWay}" />
+                <Expander Header="Why can't I see my inventory table?" Margin="0 4 0 0"
                           mah:HeaderedControlHelper.HeaderBackground="Transparent" BorderThickness="0"
                           Style="{StaticResource MetroExpanderWithNormalCase}">
                     <TextBlock Foreground="Gray">
-                        The inventory table must have the following columns:
+                        Make sure your inventory table is formatted as a table in Excel.
+                        <LineBreak />
+                        <LineBreak />
+                        The inventory table must have 5 columns:
                         <LineBreak />
                         <LineBreak />
                         <Run FontWeight="Bold">ID</Run> - the identification number of the item
@@ -103,21 +100,17 @@
                 Transaction Table
             </Label>
             <StackPanel Margin="0 0 0 4" Grid.Row="6" Grid.Column="1" Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">starts at</Label>
-                    <TextBox IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}"
-                             MinWidth="32"
-                             Text="{Binding TransactionStartCell,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">with</Label>
-                    <mah:NumericUpDown IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}"
-                                       Minimum="1" MinWidth="32" Value="{Binding TransactionRows,Mode=TwoWay}" />
-                    <Label IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}">rows</Label>
-                </StackPanel>
-                <Expander Header="More information about the transaction history table" Margin="0 4 0 0"
+                <ComboBox ItemsSource="{Binding TransactionTableNames,UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValue="{Binding TransactionTableName,Mode=TwoWay}"
+                          IsEnabled="{Binding IncludeTransactions,UpdateSourceTrigger=PropertyChanged}" />
+                <Expander Header="Why can't I see my transaction history table?" Margin="0 4 0 0"
                           mah:HeaderedControlHelper.HeaderBackground="Transparent" BorderThickness="0"
                           Style="{StaticResource MetroExpanderWithNormalCase}">
                     <TextBlock Foreground="Gray">
-                        The transaction history table must have the following columns:
+                        Make sure your transaction history table is formatted as a table in Excel.
+                        <LineBreak />
+                        <LineBreak />
+                        The transaction history table must have 8 columns:
                         <LineBreak />
                         <LineBreak />
                         <Run FontWeight="Bold">ID</Run> - the GUID of the transaction

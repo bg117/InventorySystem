@@ -1,91 +1,37 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Input;
-using InventorySystem.Common;
 using InventorySystem.Models;
+using PostSharp.Patterns.Model;
+using PostSharp.Patterns.Xaml;
 
 namespace InventorySystem.ViewModels;
 
-public class AddTransactionViewModel : ViewModelBase
+[NotifyPropertyChanged]
+public class AddTransactionViewModel
 {
-    private ICommand _addTransactionCommand;
+    public Item SelectedItem { get; set; }
 
-    private int _maximumStock;
+    public DateTime TransactionDate { get; set; } = DateTime.Now;
 
-    private string _notes = string.Empty;
-    private Item _selectedItem;
+    public int StockIn { get; set; }
 
-    private int _stockIn;
+    public int StockOut { get; set; }
 
-    private int _stockOut;
+    public TransactionStatus? Status { get; set; }
 
-    private decimal _totalPrice;
+    public string Notes { get; set; }
 
-    private DateTime? _transactionDate;
+    public decimal TotalPrice => ComputeTotalPrice();
 
-    public Item SelectedItem
-    {
-        get => _selectedItem;
-        set
-        {
-            SetField(ref _selectedItem, value);
-            MaximumStock = SelectedItem.Quantity;
-            TotalPrice = ComputeTotalPrice();
-        }
-    }
+    public int MaximumStock => SelectedItem?.Quantity ?? 0;
 
-    public DateTime TransactionDate
-    {
-        get => _transactionDate ?? DateTime.Now;
-        set => SetField(ref _transactionDate, value);
-    }
+    [Command] public ICommand AddTransactionCommand { get; }
 
-    public int StockIn
-    {
-        get => _stockIn;
-        set
-        {
-            SetField(ref _stockIn, value);
-            TotalPrice = ComputeTotalPrice();
-        }
-    }
+    public bool CanExecuteAddTransaction =>
+        SelectedItem != null && MaximumStock + StockIn > 0 && StockOut <= MaximumStock + StockIn && Status != null;
 
-    public int StockOut
-    {
-        get => _stockOut;
-        set
-        {
-            SetField(ref _stockOut, value);
-            TotalPrice = ComputeTotalPrice();
-        }
-    }
-
-    public string Notes
-    {
-        get => _notes;
-        set => SetField(ref _notes, value);
-    }
-
-    public decimal TotalPrice
-    {
-        get => _totalPrice;
-        private set => SetField(ref _totalPrice, value);
-    }
-
-    public int MaximumStock
-    {
-        get => _maximumStock;
-        set => SetField(ref _maximumStock, value);
-    }
-
-    public ICommand AddTransactionCommand =>
-        _addTransactionCommand ??= new RelayCommand(AddTransaction, CanAddTransaction);
-
-    private bool CanAddTransaction()
-    {
-        return SelectedItem != null && MaximumStock + StockIn > 0 && StockOut <= MaximumStock + StockIn;
-    }
-
-    private void AddTransaction()
+    public void ExecuteAddTransaction()
     {
         var transaction = new Transaction
         {
@@ -94,17 +40,15 @@ public class AddTransactionViewModel : ViewModelBase
             Item = SelectedItem,
             StockOut = StockOut,
             StockIn = StockIn,
-            Status = TransactionStatus.Processed,
+            Status = Status.Value!,
             TotalPrice = TotalPrice,
             Notes = Notes
         };
 
         TransactionsSingletonViewModel.Instance.Transactions.Insert(0, transaction);
 
-        MaximumStock -= StockOut - StockIn;
-
         var itemIndex = InventorySingletonViewModel.Instance.Items.IndexOf(SelectedItem);
-        InventorySingletonViewModel.Instance.Items[itemIndex].Quantity = MaximumStock;
+        InventorySingletonViewModel.Instance.Items[itemIndex].Quantity -= StockOut - StockIn;
     }
 
     private decimal ComputeTotalPrice()

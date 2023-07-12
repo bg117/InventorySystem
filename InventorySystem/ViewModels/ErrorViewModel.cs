@@ -1,22 +1,11 @@
-﻿using InventorySystem.Common;
+﻿using PostSharp.Patterns.Model;
 
 namespace InventorySystem.ViewModels;
 
-public class ErrorViewModel : ViewModelBase
+[NotifyPropertyChanged]
+public class ErrorViewModel
 {
-    private string _error;
+    public string Error { get; set; }
 
-    private bool _hasError;
-
-    public string Error
-    {
-        get => _error;
-        set => SetField(ref _error, value);
-    }
-
-    public bool HasError
-    {
-        get => _hasError;
-        set => SetField(ref _hasError, value);
-    }
+    public bool HasError { get; set; }
 }

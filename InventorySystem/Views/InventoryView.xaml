@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 8">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
             <StackPanel.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Circle}">
                     <Setter Property="Margin" Value="0 0 8 0" />
@@ -25,42 +25,31 @@
             <Button Click="AddItem_OnClick">
                 <iconPacks:PackIconMaterial Kind="Plus" />
             </Button>
-            <Button IsEnabled="{Binding HasSelected}" Click="EditSelected_OnClick">
-                <iconPacks:PackIconMaterial Kind="Pencil" />
-            </Button>
             <Button Command="{Binding RemoveSelectedCommand}">
                 <iconPacks:PackIconMaterial Kind="TrashCan" />
             </Button>
         </StackPanel>
-        <ListView Grid.Row="1" x:Name="InventoryListView"
+        <DataGrid Grid.Row="1" x:Name="InventoryDataGrid"
                   ItemsSource="{Binding Items,Source={x:Static viewModels:InventorySingletonViewModel.Instance}}"
+                  CanUserAddRows="False"
+                  AutoGenerateColumns="False"
                   SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">
-            <ListView.Resources>
-                <ContextMenu x:Key="ItemContextMenu">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
                     <MenuItem Header="Copy ID"
-                              Command="{Binding DataContext.CopyIdCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
-                    <MenuItem Header="Edit selected" Click="EditSelected_OnClick" />
+                              Command="{Binding CopyIdCommand}" />
                     <MenuItem Header="Remove selected"
-                              Command="{Binding DataContext.RemoveSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+                              Command="{Binding RemoveSelectedCommand}" />
                 </ContextMenu>
-            </ListView.Resources>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView>
-                    <GridView.Columns>
-                        <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" />
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}" />
-                        <GridViewColumn Header="Stock" DisplayMemberBinding="{Binding Quantity}" />
-                        <GridViewColumn Header="Price"
-                                        DisplayMemberBinding="{Binding Price,StringFormat='₱{0:#,#0.00}'}" />
-                    </GridView.Columns>
-                </GridView>
-            </ListView.View>
-        </ListView>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" />
+                <DataGridTextColumn Header="Stock" Binding="{Binding Quantity}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Price"
+                                    Binding="{Binding Price,StringFormat='₱{0:#,#0.00}'}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

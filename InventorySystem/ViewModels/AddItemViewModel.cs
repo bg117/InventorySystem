@@ -1,48 +1,27 @@
 ﻿using System.Windows.Input;
-using InventorySystem.Common;
 using InventorySystem.Models;
+using PostSharp.Patterns.Contracts;
+using PostSharp.Patterns.Model;
+using PostSharp.Patterns.Xaml;
 
 namespace InventorySystem.ViewModels;
 
-public class AddItemViewModel : ViewModelBase
+[NotifyPropertyChanged]
+public class AddItemViewModel
 {
-    private ICommand _addItemCommand;
+    [Required] public string Name { get; set; }
 
-    private string _description;
+    public string Description { get; set; }
 
-    private string _name;
+    public int Quantity { get; set; } = 1;
 
-    private decimal _price;
+    public decimal Price { get; set; }
 
-    private int _quantity = 1;
+    [Command] public ICommand AddItemCommand { get; }
 
-    public string Name
-    {
-        get => _name;
-        set => SetField(ref _name, value);
-    }
+    public bool CanExecuteAddItem => !string.IsNullOrWhiteSpace(Name);
 
-    public string Description
-    {
-        get => _description;
-        set => SetField(ref _description, value);
-    }
-
-    public int Quantity
-    {
-        get => _quantity;
-        set => SetField(ref _quantity, value);
-    }
-
-    public decimal Price
-    {
-        get => _price;
-        set => SetField(ref _price, value);
-    }
-
-    public ICommand AddItemCommand => _addItemCommand ??= new RelayCommand(AddItem, CanAddItem);
-
-    private void AddItem()
+    public void ExecuteAddItem()
     {
         var item = new Item
         {
@@ -54,10 +33,5 @@ public class AddItemViewModel : ViewModelBase
         };
 
         InventorySingletonViewModel.Instance.Items.Add(item);
-    }
-
-    private bool CanAddItem()
-    {
-        return !string.IsNullOrWhiteSpace(Name);
     }
 }

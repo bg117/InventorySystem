@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:converters="clr-namespace:InventorySystem.Converters"
+             xmlns:models="clr-namespace:InventorySystem.Models"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -19,7 +20,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 8">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
             <StackPanel.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Circle}">
                     <Setter Property="Margin" Value="0 0 8 0" />
@@ -33,39 +34,50 @@
                 <iconPacks:PackIconMaterial Kind="TrashCan" />
             </Button>
         </StackPanel>
-        <ListView Grid.Row="1" x:Name="TransactionsListView"
+        <DataGrid Grid.Row="1" x:Name="TransactionsListView"
                   ItemsSource="{Binding Transactions,Source={x:Static viewModels:TransactionsSingletonViewModel.Instance}}"
                   SelectionMode="Extended"
+                  CanUserAddRows="False"
+                  AutoGenerateColumns="False"
                   SelectionChanged="Selector_OnSelectionChanged">
-            <ListView.Resources>
-                <ContextMenu x:Key="ItemContextMenu">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
                     <MenuItem Header="Copy ID"
-                              Command="{Binding DataContext.CopyIdCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+                              Command="{Binding CopyIdCommand}" />
                     <MenuItem Header="Remove selected"
-                              Command="{Binding DataContext.RemoveSelectedCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+                              Command="{Binding RemoveSelectedCommand}" />
                 </ContextMenu>
-            </ListView.Resources>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+            </DataGrid.ContextMenu>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Failed">
+                            <Setter Property="Background" Value="LightCoral" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Pending">
+                            <Setter Property="Background" Value="LightYellow" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Processing">
+                            <Setter Property="Background" Value="LightBlue" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Processed">
+                            <Setter Property="Background" Value="LightGreen" />
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView>
-                    <GridView.Columns>
-                        <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" />
-                        <GridViewColumn Header="Transaction Date" DisplayMemberBinding="{Binding Date}" />
-                        <GridViewColumn Header="Item"
-                                        DisplayMemberBinding="{Binding Item,Converter={StaticResource ItemToProductNameConverter}}" />
-                        <GridViewColumn Header="Stock In" DisplayMemberBinding="{Binding StockIn}" />
-                        <GridViewColumn Header="Stock Out" DisplayMemberBinding="{Binding StockOut}" />
-                        <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" />
-                        <GridViewColumn Header="Price"
-                                        DisplayMemberBinding="{Binding TotalPrice,StringFormat='₱{0:#,#0.00}'}" />
-                        <GridViewColumn Header="Notes" DisplayMemberBinding="{Binding Notes}" />
-                    </GridView.Columns>
-                </GridView>
-            </ListView.View>
-        </ListView>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Transaction Date" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="Item"
+                                    Binding="{Binding Item,Converter={StaticResource ItemToProductNameConverter}}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Stock In" Binding="{Binding StockIn}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Stock Out" Binding="{Binding StockOut}" IsReadOnly="True" />
+                <DataGridComboBoxColumn Header="Status" ItemsSource="{converters:EnumToItemsSource {x:Type models:TransactionStatus}}" SelectedValueBinding="{Binding Status}" />
+                <DataGridTextColumn Header="Price"
+                                    Binding="{Binding TotalPrice,StringFormat='₱{0:#,#0.00}'}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

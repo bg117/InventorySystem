@@ -1,54 +1,37 @@
-﻿using InventorySystem.Common;
+﻿using PostSharp.Patterns.Contracts;
+using PostSharp.Patterns.Model;
 
 namespace InventorySystem.Models;
 
-public class Item : ViewModelBase
+[NotifyPropertyChanged]
+public class Item
 {
-    private static int _idBase = 1000000000;
+    public int Id { get; set; }
 
-    private string _description;
-    private int _id;
+    [Required] public string Name { get; set; }
 
-    private string _name;
+    public int Quantity { get; set; }
 
-    private decimal _price;
+    public string Description { get; set; }
 
-    private int _quantity;
+    public decimal Price { get; set; }
 
-    public int Id
+    public static int IdBase
     {
-        get => _id;
-        set => SetField(ref _id, value);
-    }
+        private get;
+        set;
+    } = 1000000000;
 
-    public string Name
+    public static int IdInterval
     {
-        get => _name;
-        set => SetField(ref _name, value);
-    }
-
-    public int Quantity
-    {
-        get => _quantity;
-        set => SetField(ref _quantity, value);
-    }
-
-    public string Description
-    {
-        get => _description;
-        set => SetField(ref _description, value);
-    }
-
-    public decimal Price
-    {
-        get => _price;
-        set => SetField(ref _price, value);
-    }
+        private get;
+        set;
+    } = 10;
 
     public static int NewId()
     {
-        var id = _idBase;
-        _idBase += 10;
+        var id = IdBase;
+        IdBase += IdInterval;
         return id;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
-using InventorySystem.Common;
+using PostSharp.Patterns.Contracts;
+using PostSharp.Patterns.Model;
 
 namespace InventorySystem.Models;
 
@@ -11,62 +12,22 @@ public enum TransactionStatus
     Failed
 }
 
-public class Transaction : ViewModelBase
+[NotifyPropertyChanged]
+public class Transaction
 {
-    private DateTime _date;
-    private Guid _id;
-    private Item _item;
-    private string _notes;
-    private TransactionStatus _status;
-    private int _stockIn;
-    private int _stockOut;
-    private decimal _totalPrice;
+    public Guid Id { get; set; }
 
-    public Guid Id
-    {
-        get => _id;
-        set => SetField(ref _id, value);
-    }
+    public DateTime Date { get; set; }
 
-    public DateTime Date
-    {
-        get => _date;
-        set => SetField(ref _date, value);
-    }
+    [Required] public Item Item { get; set; }
 
-    public Item Item
-    {
-        get => _item;
-        set => SetField(ref _item, value);
-    }
+    public int StockIn { get; set; }
 
-    public string Notes
-    {
-        get => _notes;
-        set => SetField(ref _notes, value);
-    }
+    public int StockOut { get; set; }
 
-    public int StockOut
-    {
-        get => _stockOut;
-        set => SetField(ref _stockOut, value);
-    }
+    public TransactionStatus Status { get; set; }
 
-    public int StockIn
-    {
-        get => _stockIn;
-        set => SetField(ref _stockIn, value);
-    }
+    public decimal TotalPrice { get; set; }
 
-    public TransactionStatus Status
-    {
-        get => _status;
-        set => SetField(ref _status, value);
-    }
-
-    public decimal TotalPrice
-    {
-        get => _totalPrice;
-        set => SetField(ref _totalPrice, value);
-    }
+    public string Notes { get; set; }
 }

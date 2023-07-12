@@ -14,7 +14,7 @@ public partial class ImportSpreadsheetView
         InitializeComponent();
 
         if (DataContext is ImportSpreadsheetViewModel viewModel)
-            viewModel.SpreadsheetImported += ViewModel_SpreadsheetImported;
+            viewModel.ImportCompleted += ViewModel_ImportCompleted;
     }
 
     private void Browse_OnClick(object sender, RoutedEventArgs e)
@@ -32,8 +32,10 @@ public partial class ImportSpreadsheetView
         if (result == true) viewModel.FilePath = dialog.FileName;
     }
 
-    private void ViewModel_SpreadsheetImported()
+    private void ViewModel_ImportCompleted()
     {
         Close();
+        MessageBox.Show("Import completed successfully.", "Information", MessageBoxButton.OK,
+            MessageBoxImage.Information);
     }
 }
