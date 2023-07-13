@@ -14,7 +14,8 @@ using PostSharp.Patterns.Xaml;
 namespace InventorySystem.ViewModels;
 
 [NotifyPropertyChanged]
-public class ImportSpreadsheetViewModel : INotifyPropertyChanged
+[Disposable]
+public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 {
     private string _filePath;
     private ExcelPackage _spreadsheet;
@@ -133,16 +134,21 @@ public class ImportSpreadsheetViewModel : INotifyPropertyChanged
 
         Spreadsheet.Dispose();
 
-        var idList = inventory.Select(x => x.Id);
+        var idList = inventory.Select(x => x.Id).ToArray();
 
         var idBase = idList.Min();
-        var idTop = idList.Max();
-        var idRange = idTop - idBase;
 
-        var idInterval = idRange / (idList.Count() - 1);
+        if (idList.Length > 1)
+        {
+            var idTop = idList.Max();
+            var idRange = idTop - idBase;
 
-        Item.IdBase = idTop + idInterval;
-        Item.IdInterval = idInterval;
+            var idInterval = idRange / (idList.Length > 1 ? idList.Length - 1 : 1);
+            idBase = idTop + idInterval;
+            Item.IdInterval = idInterval;
+        }
+
+        Item.IdBase = idBase;
 
         ImportCompleted?.Invoke();
     }
@@ -226,16 +232,15 @@ public class ImportSpreadsheetViewModel : INotifyPropertyChanged
             .Select(table => table.Name).ToList();
     }
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
         field = value;
         OnPropertyChanged(propertyName);
-        return true;
     }
 }
