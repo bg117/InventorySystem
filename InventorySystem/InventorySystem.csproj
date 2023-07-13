@@ -8,6 +8,12 @@
 		<LangVersion>latest</LangVersion>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <Deterministic>False</Deterministic>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <Deterministic>False</Deterministic>
+	</PropertyGroup>
 	<ItemGroup>
 		<COMReference Include="Microsoft.Office.Core">
 			<Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
