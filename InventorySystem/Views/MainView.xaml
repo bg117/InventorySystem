@@ -8,7 +8,13 @@
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" Focusable="True" Loaded="UserControl_Loaded">
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding ExportCommand}" />
+    </UserControl.InputBindings>
+    <UserControl.DataContext>
+        <viewModels:ExportSpreadsheetViewModel />
+    </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,16 +28,8 @@
                             <MenuItem Header="Spreadsheet" Click="FileImportSpreadsheet_OnClick" />
                         </MenuItem.Items>
                     </MenuItem>
-                    <MenuItem Header="Save...">
-                        <MenuItem.Items>
-                            <MenuItem x:Name="ExportSpreadsheetMenuItem" Header="Spreadsheet"
-                                      Command="{Binding ExportCommand}">
-                                <MenuItem.DataContext>
-                                    <viewModels:ExportSpreadsheetViewModel />
-                                </MenuItem.DataContext>
-                            </MenuItem>
-                        </MenuItem.Items>
-                    </MenuItem>
+                    <MenuItem Header="Save" x:Name="ExportSpreadsheetMenuItem" InputGestureText="Ctrl+S"
+                              Command="{Binding ExportCommand}" />
                     <Separator />
                     <MenuItem Header="Exit" InputGestureText="Alt+F4">
                         <b:Interaction.Triggers>

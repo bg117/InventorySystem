@@ -48,4 +48,9 @@ public partial class MainView
         var importSpreadsheetView = new ImportSpreadsheetView();
         importSpreadsheetView.ShowDialog();
     }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        Focus();
+    }
 }
