@@ -8,7 +8,7 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  mc:Ignorable="d"
                  Title="Import spreadsheet" Height="Auto" Width="Auto" SizeToContent="WidthAndHeight"
-                 ResizeMode="NoResize" WindowStyle="ToolWindow">
+                 ResizeMode="NoResize" WindowStyle="ToolWindow" TitleCharacterCasing="Normal">
     <mah:MetroWindow.DataContext>
         <viewModels:ImportSpreadsheetViewModel />
     </mah:MetroWindow.DataContext>

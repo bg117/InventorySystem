@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using InventorySystem.Models;
+using JetBrains.Annotations;
 using OfficeOpenXml;
 using PostSharp.Patterns.Model;
 using PostSharp.Patterns.Xaml;
@@ -18,10 +19,15 @@ namespace InventorySystem.ViewModels;
 public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 {
     private string _filePath;
+
+    [Child]
     private ExcelPackage _spreadsheet;
+
+    [Reference]
     public ErrorViewModel ErrorViewModelInstance { get; } = new();
 
-    [SafeForDependencyAnalysis] private ExcelPackage Spreadsheet => GetSpreadsheet();
+    [SafeForDependencyAnalysis]
+    private ExcelPackage Spreadsheet => GetSpreadsheet();
 
     [IgnoreAutoChangeNotification]
     public string FilePath
@@ -52,8 +58,11 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 
     public string TransactionTableName { get; set; }
 
-    [Command] public ICommand ImportCommand { get; }
+    [Command]
+    [UsedImplicitly]
+    public ICommand ImportCommand { get; }
 
+    [UsedImplicitly]
     public bool CanExecuteImport
     {
         get
@@ -73,7 +82,7 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    [Pure]
+    [PostSharp.Patterns.Model.Pure]
     private ExcelPackage GetSpreadsheet()
     {
         try
@@ -97,7 +106,7 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
         }
     }
 
-    [Pure]
+    [PostSharp.Patterns.Model.Pure]
     private List<string> GetSheetNames()
     {
         return Spreadsheet?.Workbook.Worksheets.Select(x => x.Name).ToList() ?? new List<string>();
@@ -105,6 +114,7 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 
     public event Action ImportCompleted;
 
+    [UsedImplicitly]
     public void ExecuteImport()
     {
         var inventory = ImportInventory();
@@ -112,6 +122,7 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
         if (ErrorViewModelInstance.HasError) return;
 
         InventorySingletonViewModel.Instance.Items = new ObservableCollection<Item>(inventory);
+        InventorySingletonViewModel.Instance.IsChanged = false;
 
         if (IncludeTransactions)
         {
@@ -121,6 +132,7 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 
             TransactionsSingletonViewModel.Instance.Transactions =
                 new ObservableCollection<Transaction>(transactions);
+            TransactionsSingletonViewModel.Instance.IsChanged = false;
         }
 
         ErrorViewModelInstance.HasError = false;
@@ -221,7 +233,7 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
         return inventory;
     }
 
-    [Pure]
+    [PostSharp.Patterns.Model.Pure]
     private List<string> GetTableNames(string sheetName, int columnCount)
     {
         if (string.IsNullOrWhiteSpace(sheetName))

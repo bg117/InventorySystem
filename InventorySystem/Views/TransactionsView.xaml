@@ -14,6 +14,7 @@
     </UserControl.DataContext>
     <UserControl.Resources>
         <converters:ItemToProductNameConverter x:Key="ItemToProductNameConverter" />
+        <converters:TransactionStatusToBrushConverter x:Key="TransactionStatusToBrushConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -49,34 +50,25 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Status}" Value="Failed">
-                            <Setter Property="Background" Value="LightCoral" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="Pending">
-                            <Setter Property="Background" Value="LightYellow" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="Processing">
-                            <Setter Property="Background" Value="LightBlue" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="Processed">
-                            <Setter Property="Background" Value="LightGreen" />
-                        </DataTrigger>
-                    </Style.Triggers>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
+                    <Setter Property="Background"
+                            Value="{Binding Status,Converter={StaticResource TransactionStatusToBrushConverter},UpdateSourceTrigger=PropertyChanged}" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Transaction Date" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="ID" Binding="{Binding Id,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Transaction Date" Binding="{Binding Date,UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Item"
-                                    Binding="{Binding Item,Converter={StaticResource ItemToProductNameConverter}}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Stock In" Binding="{Binding StockIn}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Stock Out" Binding="{Binding StockOut}" IsReadOnly="True" />
-                <DataGridComboBoxColumn Header="Status" ItemsSource="{converters:EnumToItemsSource {x:Type models:TransactionStatus}}" SelectedValueBinding="{Binding Status}" />
+                                    Binding="{Binding Item,Converter={StaticResource ItemToProductNameConverter},UpdateSourceTrigger=PropertyChanged}"
+                                    IsReadOnly="True" />
+                <DataGridTextColumn Header="Stock In" Binding="{Binding StockIn,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Stock Out" Binding="{Binding StockOut,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                <DataGridComboBoxColumn Header="Status"
+                                        ItemsSource="{converters:EnumToItemsSource {x:Type models:TransactionStatus}}"
+                                        SelectedValueBinding="{Binding Status,Mode=TwoWay}" />
                 <DataGridTextColumn Header="Price"
-                                    Binding="{Binding TotalPrice,StringFormat='₱{0:#,#0.00}'}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" />
+                                    Binding="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged,StringFormat='₱{0:#,#0.00}'}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Notes" Binding="{Binding Notes,Mode=TwoWay}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

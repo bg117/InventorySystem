@@ -1,4 +1,6 @@
 ﻿using System;
+using InventorySystem.Attributes;
+using InventorySystem.Interfaces;
 using PostSharp.Patterns.Contracts;
 using PostSharp.Patterns.Model;
 
@@ -19,15 +21,16 @@ public class Transaction
 
     public DateTime Date { get; set; }
 
-    [Required] public Item Item { get; set; }
-
+    [Required]
+    public Item Item { get; set; }
+    
     public int StockIn { get; set; }
-
+    
     public int StockOut { get; set; }
-
+    
     public TransactionStatus Status { get; set; }
-
+    
     public decimal TotalPrice { get; set; }
-
+    
     public string Notes { get; set; }
 }

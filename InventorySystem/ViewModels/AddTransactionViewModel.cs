@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Input;
 using InventorySystem.Models;
+using JetBrains.Annotations;
 using PostSharp.Patterns.Model;
 using PostSharp.Patterns.Xaml;
 
@@ -26,13 +26,20 @@ public class AddTransactionViewModel
 
     public int MaximumStock => SelectedItem?.Quantity ?? 0;
 
-    [Command] public ICommand AddTransactionCommand { get; }
+    [Command]
+    [UsedImplicitly]
+    public ICommand AddTransactionCommand { get; }
 
+    [UsedImplicitly]
     public bool CanExecuteAddTransaction =>
         SelectedItem != null && MaximumStock + StockIn > 0 && StockOut <= MaximumStock + StockIn && Status != null;
 
+    [UsedImplicitly]
     public void ExecuteAddTransaction()
     {
+        if (Status == null)
+            return;
+
         var transaction = new Transaction
         {
             Id = Guid.NewGuid(),

@@ -10,7 +10,7 @@
                  xmlns:models="clr-namespace:InventorySystem.Models"
                  mc:Ignorable="d"
                  Height="Auto" Width="Auto" Title="Add transaction" SizeToContent="WidthAndHeight"
-                 ResizeMode="NoResize" WindowStyle="ToolWindow">
+                 ResizeMode="NoResize" WindowStyle="ToolWindow" TitleCharacterCasing="Normal">
     <mah:MetroWindow.DataContext>
         <viewModels:AddTransactionViewModel />
     </mah:MetroWindow.DataContext>

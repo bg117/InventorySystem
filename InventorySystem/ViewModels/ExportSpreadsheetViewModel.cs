@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using JetBrains.Annotations;
 using OfficeOpenXml;
 using OfficeOpenXml.Table;
 using PostSharp.Patterns.Model;
@@ -14,11 +15,14 @@ public class ExportSpreadsheetViewModel
 {
     public string FilePath { get; set; }
 
-    [Command] public ICommand ExportCommand { get; }
+    [Command]
+    [UsedImplicitly]
+    public ICommand ExportCommand { get; }
 
     public event Action ExportFailed;
     public event Action ExportCompleted;
 
+    [UsedImplicitly]
     public void ExecuteExport()
     {
         if (string.IsNullOrWhiteSpace(FilePath)) ExportFailed?.Invoke();
@@ -76,6 +80,8 @@ public class ExportSpreadsheetViewModel
         for (var i = 0; i < items.Length - 1; i++)
             inventoryTable.AddRow();
         inventoryTable.Range.Offset(1, 0).LoadFromArrays(items);
+
+        InventorySingletonViewModel.Instance.IsChanged = false;
     }
 
     private static void ExportTransactions(ExcelWorksheets worksheets, SpreadsheetSingletonViewModel instance)
@@ -123,6 +129,12 @@ public class ExportSpreadsheetViewModel
 
         for (var i = 0; i < transactions.Length - 1; i++)
             transactionTable.AddRow();
+
         transactionTable.Range.Offset(1, 0).LoadFromArrays(transactions);
+        // format 2nd column as date
+        transactionSheet.Cells[transactionTable.Address.Start.Row + 1, 2,
+            transactionTable.Address.End.Row, 2].Style.Numberformat.Format = "m/d/yy h:mm";
+
+        TransactionsSingletonViewModel.Instance.IsChanged = false;
     }
 }

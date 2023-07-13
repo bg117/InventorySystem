@@ -1,4 +1,5 @@
-﻿using PostSharp.Patterns.Model;
+﻿using JetBrains.Annotations;
+using PostSharp.Patterns.Model;
 
 namespace InventorySystem.ViewModels;
 
@@ -11,7 +12,7 @@ public class SpreadsheetSingletonViewModel
 
     public static SpreadsheetSingletonViewModel Instance { get; } = new();
 
-    public string FilePath { get; set; }
+    public string FilePath { [UsedImplicitly] get; set; }
 
     public string InventoryTableName { get; set; }
 

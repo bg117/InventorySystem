@@ -30,6 +30,7 @@ public class ItemToProductNameConverter : IValueConverter
         var id = System.Convert.ToInt32(split[0]); // ID of item
 
         return InventorySingletonViewModel.Instance.Items.FirstOrDefault(item => item.Id == id) ??
-               throw new ArgumentException($"There does not exist an element of type {typeof(Item)} with {nameof(Item.Id)} == {id}");
+               throw new ArgumentException(
+                   $"There does not exist an element of type {typeof(Item)} with {nameof(Item.Id)} == {id}");
     }
 }
