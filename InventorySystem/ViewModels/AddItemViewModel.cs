@@ -15,7 +15,7 @@ public class AddItemViewModel
 
     public string Description { get; set; }
 
-    public int Quantity { get; set; } = 1;
+    public long Quantity { get; set; } = 1;
 
     public decimal Price { get; set; }
 

@@ -181,10 +181,10 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
                 {
                     Id = Guid.Parse(Convert.ToString(transactionSheet.Cells[i, baseColumn + 0].Value) ??
                                     string.Empty),
-                    Date = DateTime.FromOADate(Convert.ToDouble(transactionSheet.Cells[i, baseColumn + 1].Value)),
+                    Date = Convert.ToDateTime(transactionSheet.Cells[i, baseColumn + 1].Value),
                     Item = inventory.First(item => item.Id == itemId),
-                    StockIn = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 3].Value),
-                    StockOut = Convert.ToInt32(transactionSheet.Cells[i, baseColumn + 4].Value),
+                    StockIn = Convert.ToInt64(transactionSheet.Cells[i, baseColumn + 3].Value),
+                    StockOut = Convert.ToInt64(transactionSheet.Cells[i, baseColumn + 4].Value),
                     Status = (TransactionStatus)Enum.Parse(typeof(TransactionStatus),
                         Convert.ToString(transactionSheet.Cells[i, baseColumn + 5].Value) ?? string.Empty),
                     TotalPrice = Convert.ToDecimal(transactionSheet.Cells[i, baseColumn + 6].Value),
@@ -218,7 +218,7 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
                     Id = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 0].Value),
                     Name = Convert.ToString(inventorySheet.Cells[i, baseColumn + 1].Value),
                     Description = Convert.ToString(inventorySheet.Cells[i, baseColumn + 2].Value),
-                    Quantity = Convert.ToInt32(inventorySheet.Cells[i, baseColumn + 3].Value),
+                    Quantity = Convert.ToInt64(inventorySheet.Cells[i, baseColumn + 3].Value),
                     Price = Convert.ToDecimal(inventorySheet.Cells[i, baseColumn + 4].Value)
                 };
                 inventory.Add(item);

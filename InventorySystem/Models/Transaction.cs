@@ -24,9 +24,9 @@ public class Transaction
     [Required]
     public Item Item { get; set; }
     
-    public int StockIn { get; set; }
+    public long StockIn { get; set; }
     
-    public int StockOut { get; set; }
+    public long StockOut { get; set; }
     
     public TransactionStatus Status { get; set; }
     

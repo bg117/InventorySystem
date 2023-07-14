@@ -14,9 +14,9 @@ public class AddTransactionViewModel
 
     public DateTime TransactionDate { get; set; } = DateTime.Now;
 
-    public int StockIn { get; set; }
+    public long StockIn { get; set; }
 
-    public int StockOut { get; set; }
+    public long StockOut { get; set; }
 
     public TransactionStatus? Status { get; set; }
 
@@ -24,7 +24,7 @@ public class AddTransactionViewModel
 
     public decimal TotalPrice => ComputeTotalPrice();
 
-    public int MaximumStock => SelectedItem?.Quantity ?? 0;
+    public long MaximumStock => SelectedItem?.Quantity ?? 0;
 
     [Command]
     [UsedImplicitly]
