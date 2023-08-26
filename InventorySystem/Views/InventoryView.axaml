@@ -10,19 +10,57 @@
     <Design.DataContext>
         <viewModels:InventoryViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
         <!-- toolbar -->
-        <StackPanel Orientation="Horizontal" Spacing="4" Margin="0 0 0 8">
-            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-filter" Command="{Binding FilterCommand}" />
-            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-plus" Command="{Binding AddItemCommand}" />
-            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-trash" Command="{Binding RemoveItemCommand}" />
+        <StackPanel Orientation="Horizontal" Spacing="4">
+            <Button i:Attached.Icon="fa-filter" Command="{Binding FilterCommand}" />
+            <Button i:Attached.Icon="fa-plus" Command="{Binding AddItemCommand}" />
+            <Button i:Attached.Icon="fa-trash" Command="{Binding RemoveItemCommand}" />
         </StackPanel>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Context.Items}">
+        <StackPanel Grid.Row="1" IsVisible="{Binding IsFilterVisible}">
+            <Grid ColumnDefinitions="Auto,*,Auto"
+                  RowDefinitions="Auto,Auto,Auto">
+                <!-- filters: name and description contains, unit price range, quantity range -->
+                <Label Margin="0 4" VerticalContentAlignment="Center">Name and description contains:</Label>
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="0 4" Text="{Binding SearchQuery}" />
+                <Button Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="4 0"
+                        i:Attached.Icon="fa-eraser"
+                        Command="{Binding ClearSearchQueryCommand}" />
+
+                <Label Grid.Row="1" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Quantity ranges from:</Label>
+                <Grid Grid.Row="1" Grid.Column="1" Margin="0 4" ColumnDefinitions="*,Auto,*">
+                    <NumericUpDown Value="{Binding QuantityRangeLowerBound}" />
+                    <Label Grid.Column="1" Margin="4 0" VerticalContentAlignment="Center">to</Label>
+                    <NumericUpDown Grid.Column="2" Value="{Binding QuantityRangeUpperBound}" />
+                </Grid>
+                <Button Grid.Row="1"
+                        Grid.Column="2"
+                        Margin="4 0"
+                        i:Attached.Icon="fa-eraser"
+                        Command="{Binding ClearQuantityRangeCommand}" />
+
+                <Label Grid.Row="2" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Unit price ranges from:</Label>
+                <Grid Grid.Row="2" Grid.Column="1" Margin="0 4" ColumnDefinitions="*,Auto,*">
+                    <NumericUpDown Value="{Binding PriceRangeLowerBound}" />
+                    <Label Grid.Column="1" Margin="4 0" VerticalContentAlignment="Center">to</Label>
+                    <NumericUpDown Grid.Column="2" Value="{Binding PriceRangeUpperBound}" />
+                </Grid>
+                <Button Grid.Row="2"
+                        Grid.Column="2"
+                        Margin="4 0"
+                        i:Attached.Icon="fa-eraser"
+                        Command="{Binding ClearPriceRangeCommand}" />
+            </Grid>
+        </StackPanel>
+        <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredItems}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" CanUserSort="True" />
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" CanUserSort="True" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" CanUserSort="True" />
-                <DataGridTextColumn Header="Unit Price" Binding="{Binding UnitPrice,StringFormat=0:C}" CanUserSort="True" />
+                <DataGridTextColumn Header="Unit Price" Binding="{Binding UnitPrice,StringFormat='{}{0:C}'}"
+                                    CanUserSort="True" />
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" IsReadOnly="True" CanUserSort="True" />
             </DataGrid.Columns>
         </DataGrid>

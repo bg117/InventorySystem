@@ -1,45 +1,117 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Reactive.Linq;
 using System.Windows.Input;
-using InventorySystem.Utilities;
+using DynamicData;
+using DynamicData.Binding;
+using InventorySystem.Models;
 using InventorySystem.ViewModels.Singleton;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace InventorySystem.ViewModels;
 
 public class InventoryViewModel : ViewModelBase
 {
-    public Context Context => Context.Instance;
-    
-    public ICommand FilterCommand => new RelayCommand(Filter, CanFilter);
-    public ICommand AddItemCommand => new RelayCommand(AddItem, CanAddItem);
-    public ICommand RemoveItemCommand => new RelayCommand(RemoveItem, CanRemoveItem);
-    
+    private readonly ReadOnlyObservableCollection<Item> _filteredItems;
+    public ReadOnlyObservableCollection<Item> FilteredItems => _filteredItems;
+
+    public InventoryViewModel()
+    {
+        var filter = this.WhenAnyValue(
+            x => x.SearchQuery,
+            x => x.QuantityRangeLowerBound,
+            x => x.QuantityRangeUpperBound,
+            x => x.PriceRangeLowerBound,
+            x => x.PriceRangeUpperBound,
+            (query, quantityLowerBound, quantityUpperBound, priceLowerBound, priceUpperBound) =>
+                new Func<Item, bool>(item =>
+                    (string.IsNullOrEmpty(query) || item.Name.Contains(query) ||
+                     item.Description?.Contains(query) == true) &&
+                    (quantityLowerBound is null || item.Quantity >= quantityLowerBound) &&
+                    (quantityUpperBound is null || item.Quantity <= quantityUpperBound) &&
+                    (priceLowerBound is null || item.UnitPrice >= priceLowerBound) &&
+                    (priceUpperBound is null || item.UnitPrice <= priceUpperBound)
+                )
+        );
+
+        Context.Instance.Items
+            .Connect()
+            .Filter(filter)
+            .Sort(SortExpressionComparer<Item>.Ascending(item => item.Id))
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Bind(out _filteredItems)
+            .Subscribe();
+    }
+
+    [Reactive] public bool IsFilterVisible { get; set; }
+    [Reactive] public string? SearchQuery { get; set; }
+    [Reactive] public int? QuantityRangeLowerBound { get; set; }
+    [Reactive] public int? QuantityRangeUpperBound { get; set; }
+    [Reactive] public decimal? PriceRangeLowerBound { get; set; }
+    [Reactive] public decimal? PriceRangeUpperBound { get; set; }
+
+    public ICommand FilterCommand => ReactiveCommand.Create(Filter);
+    public ICommand AddItemCommand => ReactiveCommand.Create(AddItem);
+    public ICommand RemoveItemCommand => ReactiveCommand.Create(RemoveItem);
+
+    public ICommand ClearSearchQueryCommand => ReactiveCommand.Create(ClearSearchQuery, this.WhenAnyValue(
+        x => x.SearchQuery,
+        query => !string.IsNullOrEmpty(query)
+    ));
+
+    public ICommand ClearQuantityRangeCommand => ReactiveCommand.Create(ClearQuantityRange, this.WhenAnyValue(
+        x => x.QuantityRangeLowerBound,
+        x => x.QuantityRangeUpperBound,
+        (lowerBound, upperBound) => lowerBound is not null || upperBound is not null
+    ));
+
+    public ICommand ClearPriceRangeCommand => ReactiveCommand.Create(ClearPriceRange, this.WhenAnyValue(
+        x => x.PriceRangeLowerBound,
+        x => x.PriceRangeUpperBound,
+        (lowerBound, upperBound) => lowerBound is not null || upperBound is not null
+    ));
+
     private void Filter()
     {
-        throw new NotImplementedException();
+        IsFilterVisible = !IsFilterVisible;
     }
-    
-    private bool CanFilter()
-    {
-        return true;
-    }
+
+    private static int _id = 5;
 
     private void AddItem()
     {
-        throw new NotImplementedException();
+        // add dummy data
+        var id = ++_id;
+        Context.Instance.Items.Add(new Item
+        {
+            Name = $"Item {id}",
+            Description = $"Description {id}",
+            Quantity = id,
+            UnitPrice = id * 10
+        });
     }
-    
-    private bool CanAddItem()
-    {
-        return true;
-    }
-    
+
     private void RemoveItem()
     {
         throw new NotImplementedException();
     }
-    
-    private bool CanRemoveItem()
+
+    private void ClearSearchQuery()
     {
-        return true;
+        SearchQuery = null;
+    }
+
+    private void ClearQuantityRange()
+    {
+        QuantityRangeLowerBound = null;
+        QuantityRangeUpperBound = null;
+    }
+
+    private void ClearPriceRange()
+    {
+        PriceRangeLowerBound = null;
+        PriceRangeUpperBound = null;
     }
 }

@@ -1,45 +1,47 @@
 using System;
+using System.Collections.ObjectModel;
+using System.Reactive.Linq;
 using System.Windows.Input;
-using InventorySystem.Utilities;
+using DynamicData;
+using InventorySystem.Models;
 using InventorySystem.ViewModels.Singleton;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace InventorySystem.ViewModels;
 
 public class TransactionsViewModel : ViewModelBase
 {
-    public Context Context => Context.Instance;
+    private readonly ReadOnlyObservableCollection<Transaction> _filteredTransactions;
+    public ReadOnlyObservableCollection<Transaction> FilteredTransactions => _filteredTransactions;
     
-    public ICommand FilterCommand => new RelayCommand(Filter, CanFilter);
-    public ICommand AddItemCommand => new RelayCommand(AddItem, CanAddItem);
-    public ICommand RemoveItemCommand => new RelayCommand(RemoveItem, CanRemoveItem);
+    public TransactionsViewModel()
+    {
+        Context.Instance.Transactions
+            .Connect()
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Bind(out _filteredTransactions)
+            .Subscribe();
+    }
+
+    [Reactive] public string SearchQuery { get; set; } = string.Empty;
     
+    public ICommand FilterCommand => ReactiveCommand.Create(Filter);
+    public ICommand AddItemCommand => ReactiveCommand.Create(AddItem);
+    public ICommand RemoveItemCommand => ReactiveCommand.Create(RemoveItem);
+
     private void Filter()
     {
         throw new NotImplementedException();
-    }
-    
-    private bool CanFilter()
-    {
-        return true;
     }
 
     private void AddItem()
     {
         throw new NotImplementedException();
     }
-    
-    private bool CanAddItem()
-    {
-        return true;
-    }
-    
+
     private void RemoveItem()
     {
         throw new NotImplementedException();
-    }
-    
-    private bool CanRemoveItem()
-    {
-        return true;
     }
 }

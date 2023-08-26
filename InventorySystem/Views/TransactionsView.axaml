@@ -11,12 +11,12 @@
         <viewModels:TransactionsViewModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto,*">
-        <StackPanel Orientation="Horizontal" Spacing="4" Margin="0 0 0 8">
-            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-filter" Command="{Binding FilterCommand}" />
-            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-plus" Command="{Binding AddItemCommand}" />
-            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-trash" Command="{Binding RemoveItemCommand}" />
+        <StackPanel Orientation="Horizontal" Spacing="4">
+            <Button i:Attached.Icon="fa-filter" Command="{Binding FilterCommand}" />
+            <Button i:Attached.Icon="fa-plus" Command="{Binding AddItemCommand}" />
+            <Button i:Attached.Icon="fa-trash" Command="{Binding RemoveItemCommand}" />
         </StackPanel>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Context.Transactions}">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredTransactions}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
