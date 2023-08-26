@@ -1,9 +1,10 @@
 using System;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace InventorySystem.Models;
 
-public class Transaction
+public class Transaction : ReactiveObject
 {
     [Reactive] public Guid Id { get; set; }
     [Reactive] public DateTime Date { get; set; }

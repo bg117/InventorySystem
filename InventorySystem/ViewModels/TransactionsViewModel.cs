@@ -1,8 +1,8 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using DynamicData;
+using DynamicData.Binding;
 using InventorySystem.Models;
 using InventorySystem.ViewModels.Singleton;
 using ReactiveUI;
@@ -12,15 +12,15 @@ namespace InventorySystem.ViewModels;
 
 public class TransactionsViewModel : ViewModelBase
 {
-    private readonly ReadOnlyObservableCollection<Transaction> _filteredTransactions;
-    public ReadOnlyObservableCollection<Transaction> FilteredTransactions => _filteredTransactions;
+    public IObservableCollection<Transaction> FilteredTransactions { get; } = new ObservableCollectionExtended<Transaction>();
     
     public TransactionsViewModel()
     {
         Context.Instance.Transactions
             .Connect()
+            .AutoRefresh()
             .ObserveOn(RxApp.MainThreadScheduler)
-            .Bind(out _filteredTransactions)
+            .Bind(FilteredTransactions)
             .Subscribe();
     }
 
