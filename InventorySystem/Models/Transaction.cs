@@ -1,36 +1,15 @@
-﻿using System;
-using InventorySystem.Attributes;
-using InventorySystem.Interfaces;
-using PostSharp.Patterns.Contracts;
-using PostSharp.Patterns.Model;
+using System;
+using ReactiveUI.Fody.Helpers;
 
 namespace InventorySystem.Models;
 
-public enum TransactionStatus
-{
-    Processed,
-    Processing,
-    Pending,
-    Failed
-}
-
-[NotifyPropertyChanged]
 public class Transaction
 {
-    public Guid Id { get; set; }
-
-    public DateTime Date { get; set; }
-
-    [Required]
-    public Item Item { get; set; }
-    
-    public long StockIn { get; set; }
-    
-    public long StockOut { get; set; }
-    
-    public TransactionStatus Status { get; set; }
-    
-    public decimal TotalPrice { get; set; }
-    
-    public string Notes { get; set; }
+    [Reactive] public Guid Id { get; set; }
+    [Reactive] public DateTime Date { get; set; }
+    [Reactive] public Item Item { get; set; }
+    [Reactive] public int In { get; set; }
+    [Reactive] public int Out { get; set; }
+    [Reactive] public decimal Total { get; set; }
+    [Reactive] public string? Remarks { get; set; }
 }

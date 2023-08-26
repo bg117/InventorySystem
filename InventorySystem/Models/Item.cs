@@ -1,32 +1,20 @@
-﻿using InventorySystem.Attributes;
-using InventorySystem.Interfaces;
-using PostSharp.Patterns.Contracts;
-using PostSharp.Patterns.Model;
+using System;
+using ReactiveUI.Fody.Helpers;
 
 namespace InventorySystem.Models;
 
-[NotifyPropertyChanged]
 public class Item
 {
-    public int Id { get; set; }
-
-    [Required]
-    public string Name { get; set; }
+    [Reactive] public int Id { get; }
+    [Reactive] public string Name { get; set; }
+    [Reactive] public string? Description { get; set; }
+    [Reactive] public int Quantity { get; set; }
+    [Reactive] public decimal UnitPrice { get; set; }
     
-    public long Quantity { get; set; }
+    private static int _idCounter = 1;
     
-    public string Description { get; set; }
-    
-    public decimal Price { get; set; }
-
-    public static int IdBase { private get; set; } = 1000000000;
-
-    public static int IdInterval { private get; set; } = 10;
-
-    public static int NewId()
+    public Item()
     {
-        var id = IdBase;
-        IdBase += IdInterval;
-        return id;
+        Id = _idCounter++;
     }
 }

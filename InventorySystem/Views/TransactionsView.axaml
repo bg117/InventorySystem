@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="https://github.com/projektanker/icons.avalonia"
+             xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="InventorySystem.Views.TransactionsView"
+             x:DataType="viewModels:TransactionsViewModel">
+    <Design.DataContext>
+        <viewModels:TransactionsViewModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Orientation="Horizontal" Spacing="4" Margin="0 0 0 8">
+            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-filter" Command="{Binding FilterCommand}" />
+            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-plus" Command="{Binding AddItemCommand}" />
+            <Button VerticalAlignment="Stretch" i:Attached.Icon="fa-trash" Command="{Binding RemoveItemCommand}" />
+        </StackPanel>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Context.Transactions}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="Item" Binding="{Binding Item}" />
+                <DataGridTextColumn Header="In" Binding="{Binding In}" />
+                <DataGridTextColumn Header="Out" Binding="{Binding Out}" />
+                <DataGridTextColumn Header="Total" Binding="{Binding Total}" />
+                <DataGridTextColumn Header="Remarks" Binding="{Binding Remarks}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

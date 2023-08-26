@@ -1,44 +1,45 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+using System;
 using System.Windows.Input;
-using InventorySystem.Models;
-using JetBrains.Annotations;
-using PostSharp.Patterns.Model;
-using PostSharp.Patterns.Xaml;
+using InventorySystem.Utilities;
+using InventorySystem.ViewModels.Singleton;
 
 namespace InventorySystem.ViewModels;
 
-[NotifyPropertyChanged]
-public class InventoryViewModel
+public class InventoryViewModel : ViewModelBase
 {
-    public List<Item> SelectedItems { get; set; }
-
-    public bool HasSelected { [UsedImplicitly] get; set; }
-
-    [Command]
-    [UsedImplicitly]
-    public ICommand RemoveSelectedCommand { get; }
-
-    [Command]
-    [UsedImplicitly]
-    public ICommand CopyIdCommand { get; }
-
-    [UsedImplicitly]
-    public bool CanExecuteRemoveSelected => SelectedItems?.Count > 0;
-
-    [UsedImplicitly]
-    public bool CanExecuteCopyId => SelectedItems?.Count > 0;
-
-    [UsedImplicitly]
-    public void ExecuteRemoveSelected()
+    public Context Context => Context.Instance;
+    
+    public ICommand FilterCommand => new RelayCommand(Filter, CanFilter);
+    public ICommand AddItemCommand => new RelayCommand(AddItem, CanAddItem);
+    public ICommand RemoveItemCommand => new RelayCommand(RemoveItem, CanRemoveItem);
+    
+    private void Filter()
     {
-        foreach (var item in SelectedItems) InventorySingletonViewModel.Instance.Items.Remove(item);
+        throw new NotImplementedException();
+    }
+    
+    private bool CanFilter()
+    {
+        return true;
     }
 
-    [UsedImplicitly]
-    public void ExecuteCopyId()
+    private void AddItem()
     {
-        Clipboard.SetText(string.Join("\n", SelectedItems.Select(t => t.Id.ToString())));
+        throw new NotImplementedException();
+    }
+    
+    private bool CanAddItem()
+    {
+        return true;
+    }
+    
+    private void RemoveItem()
+    {
+        throw new NotImplementedException();
+    }
+    
+    private bool CanRemoveItem()
+    {
+        return true;
     }
 }

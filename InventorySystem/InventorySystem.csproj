@@ -1,56 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
-		<OutputType>WinExe</OutputType>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<UseWPF>true</UseWPF>
-		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-		<LangVersion>latest</LangVersion>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <Deterministic>False</Deterministic>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <Deterministic>False</Deterministic>
-	</PropertyGroup>
-	<ItemGroup>
-		<COMReference Include="Microsoft.Office.Core">
-			<Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
-			<VersionMajor>2</VersionMajor>
-			<VersionMinor>8</VersionMinor>
-			<Lcid>0</Lcid>
-			<WrapperTool>primary</WrapperTool>
-			<Isolated>False</Isolated>
-			<EmbedInteropTypes>True</EmbedInteropTypes>
-		</COMReference>
-		<COMReference Include="VBIDE">
-			<Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
-			<VersionMajor>5</VersionMajor>
-			<VersionMinor>3</VersionMinor>
-			<Lcid>0</Lcid>
-			<WrapperTool>primary</WrapperTool>
-			<Isolated>False</Isolated>
-			<EmbedInteropTypes>True</EmbedInteropTypes>
-		</COMReference>
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="ControlzEx" Version="4.4.0" />
-		<PackageReference Include="EPPlus" Version="6.2.6" />
-		<PackageReference Include="EPPlus.Interfaces" Version="6.1.1" />
-		<PackageReference Include="EPPlus.System.Drawing" Version="6.1.1" />
-		<PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
-		<PackageReference Include="MahApps.Metro" Version="2.4.10" />
-		<PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-		<PackageReference Include="PostSharp" Version="2023.0.6" />
-		<PackageReference Include="PostSharp.Patterns.Common" Version="2023.0.6" />
-		<PackageReference Include="PostSharp.Patterns.Diagnostics" Version="2023.0.6" />
-		<PackageReference Include="PostSharp.Patterns.Model" Version="2023.0.6" />
-		<PackageReference Include="PostSharp.Patterns.Xaml" Version="2023.0.6" />
-		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		<PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-	</ItemGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AssemblyVersion>0.9.*</AssemblyVersion>
+        <Deterministic>false</Deterministic>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**"/>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.4" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.4" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.4" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
+        <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="8.2.0" />
+        <PackageReference Include="ReactiveUI.Fody" Version="19.4.1" />
+    </ItemGroup>
 </Project>
