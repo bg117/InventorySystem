@@ -1,16 +1,18 @@
 using System;
+using Newtonsoft.Json;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace InventorySystem.Models;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class Transaction : ReactiveObject
 {
-    [Reactive] public Guid Id { get; set; }
-    [Reactive] public DateTime Date { get; set; }
-    [Reactive] public Item Item { get; set; }
-    [Reactive] public int In { get; set; }
-    [Reactive] public int Out { get; set; }
-    [Reactive] public decimal Total { get; set; }
-    [Reactive] public string? Remarks { get; set; }
+    [JsonProperty] [Reactive] public Guid Id { get; set; }
+    [JsonProperty] [Reactive] public DateTime Date { get; set; }
+    [JsonProperty] [Reactive] public Item Item { get; set; }
+    [JsonProperty] [Reactive] public int In { get; set; }
+    [JsonProperty] [Reactive] public int Out { get; set; }
+    [JsonProperty] [Reactive] public decimal Total { get; set; }
+    [JsonProperty] [Reactive] public string? Remarks { get; set; }
 }

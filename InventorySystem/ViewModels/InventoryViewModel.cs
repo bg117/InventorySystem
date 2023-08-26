@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
 using System.Reactive.Linq;
+using Newtonsoft.Json;
 using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
 using InventorySystem.Models;
 using InventorySystem.ViewModels.Singleton;
+using Newtonsoft.Json.Serialization;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

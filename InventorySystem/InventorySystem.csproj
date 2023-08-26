@@ -24,6 +24,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="8.2.0" />
         <PackageReference Include="ReactiveUI.Fody" Version="19.4.1" />
     </ItemGroup>
