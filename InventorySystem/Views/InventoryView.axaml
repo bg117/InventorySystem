@@ -14,74 +14,15 @@
     <Design.DataContext>
         <viewModels:InventoryViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="Auto,Auto,Auto,*">
+    <Grid RowDefinitions="Auto,*">
         <!-- toolbar -->
         <StackPanel Orientation="Horizontal" Spacing="4">
-            <Button i:Attached.Icon="fa-filter" Command="{Binding OpenFilterCommand}" />
-            <Button i:Attached.Icon="fa-plus" Command="{Binding OpenAddItemCommand}" />
+            <Button i:Attached.Icon="fa-filter" Click="FilterButton_OnClick" />
+            <Button i:Attached.Icon="fa-plus" Click="AddButton_OnClick"/>
             <Button i:Attached.Icon="fa-trash" Command="{Binding RemoveItemCommand}" />
         </StackPanel>
-        <StackPanel Grid.Row="1" IsVisible="{Binding IsFilterVisible}">
-            <Grid ColumnDefinitions="Auto,*,Auto"
-                  RowDefinitions="Auto,Auto,Auto">
-                <!-- filters: name and description contains, unit price range, quantity range -->
-                <Label Margin="0 4" VerticalContentAlignment="Center">Name and/or description contains</Label>
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="0 4" Text="{Binding SearchQuery}" />
-                <Button Grid.Row="0"
-                        Grid.Column="2"
-                        Margin="4 0"
-                        i:Attached.Icon="fa-eraser"
-                        Command="{Binding ClearSearchQueryCommand}" />
-
-                <Label Grid.Row="1" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Quantity ranges from</Label>
-                <Grid Grid.Row="1" Grid.Column="1" Margin="0 4" ColumnDefinitions="*,Auto,*">
-                    <NumericUpDown Value="{Binding QuantityRangeLowerBound}" />
-                    <Label Grid.Column="1" Margin="4 0" VerticalContentAlignment="Center">to</Label>
-                    <NumericUpDown Grid.Column="2" Value="{Binding QuantityRangeUpperBound}" />
-                </Grid>
-                <Button Grid.Row="1"
-                        Grid.Column="2"
-                        Margin="4 0"
-                        i:Attached.Icon="fa-eraser"
-                        Command="{Binding ClearQuantityRangeCommand}" />
-
-                <Label Grid.Row="2" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Unit price ranges from</Label>
-                <Grid Grid.Row="2" Grid.Column="1" Margin="0 4" ColumnDefinitions="*,Auto,*">
-                    <NumericUpDown Value="{Binding PriceRangeLowerBound}" />
-                    <Label Grid.Column="1" Margin="4 0" VerticalContentAlignment="Center">to</Label>
-                    <NumericUpDown Grid.Column="2" Value="{Binding PriceRangeUpperBound}" />
-                </Grid>
-                <Button Grid.Row="2"
-                        Grid.Column="2"
-                        Margin="4 0"
-                        i:Attached.Icon="fa-eraser"
-                        Command="{Binding ClearPriceRangeCommand}" />
-            </Grid>
-            <Separator />
-        </StackPanel>
         <!-- add item form -->
-        <StackPanel Grid.Row="2" IsVisible="{Binding IsAddItemVisible}">
-            <Grid ColumnDefinitions="Auto,*"
-                  RowDefinitions="Auto,Auto,Auto,Auto">
-                <!-- filters: name and description contains, unit price range, quantity range -->
-                <Label Margin="0 4" VerticalContentAlignment="Center">Product name</Label>
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="0 4" Text="{Binding ProductName}" />
-
-                <Label Grid.Row="1" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Product description</Label>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="0 4" Text="{Binding ProductDescription}" />
-
-                <Label Grid.Row="2" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Product quantity</Label>
-                <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding ProductInitialQuantity}" />
-
-                <Label Grid.Row="3" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Unit price</Label>
-                <NumericUpDown Grid.Row="3" Grid.Column="1" Margin="0 4" Value="{Binding ProductUnitPrice}" />
-            </Grid>
-            <Button i:Attached.Icon="fa-plus" Command="{Binding AddItemCommand}">
-                Add item
-            </Button>
-            <Separator />
-        </StackPanel>
-        <DataGrid Grid.Row="3" ItemsSource="{Binding FilteredItems}">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredItems}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" CanUserSort="True" />
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" CanUserSort="True" />

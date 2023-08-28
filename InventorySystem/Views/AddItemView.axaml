@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        mc:Ignorable="d"
+        x:Class="InventorySystem.Views.AddItemView"
+        x:DataType="viewModels:AddItemViewModel"
+        CanResize="False"
+        SizeToContent="WidthAndHeight"
+        Title="{Binding String}">
+    <Design.DataContext>
+        <viewModels:AddItemViewModel />
+    </Design.DataContext>
+    
+    <StackPanel Orientation="Vertical"
+                Spacing="4" Margin="8">
+        <TextBlock Classes="h1" Text="{Binding String}" />
+        
+        <Grid ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto">
+            <!-- filters: name and description contains, unit price range, quantity range -->
+            <Label Margin="0 4" VerticalContentAlignment="Center">Product name</Label>
+            <TextBox Grid.Row="0" Grid.Column="1" Margin="0 4" Text="{Binding Item.Name}" />
+
+            <Label Grid.Row="1" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Product description</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" Margin="0 4" Text="{Binding Item.Description}" />
+
+            <Label Grid.Row="2" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Product quantity</Label>
+            <NumericUpDown Grid.Row="2" Grid.Column="1" Margin="0 4" Value="{Binding Item.Quantity}" IsEnabled="{Binding !IsEditing}" />
+
+            <Label Grid.Row="3" Grid.Column="0" Margin="0 4" VerticalContentAlignment="Center">Unit price</Label>
+            <NumericUpDown Grid.Row="3" Grid.Column="1" Margin="0 4" Value="{Binding Item.UnitPrice}" />
+        </Grid>
+        <Button i:Attached.Icon="fa-plus" Command="{Binding AddItemCommand}">
+            Add item
+        </Button>
+    </StackPanel>
+</Window>

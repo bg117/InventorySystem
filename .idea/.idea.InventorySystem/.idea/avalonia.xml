@@ -4,6 +4,8 @@
     <option name="projectPerEditor">
       <map>
         <entry key="InventorySystem/App.axaml" value="InventorySystem/InventorySystem.csproj" />
+        <entry key="InventorySystem/Views/AddItemView.axaml" value="InventorySystem/InventorySystem.csproj" />
+        <entry key="InventorySystem/Views/InventoryFilterView.axaml" value="InventorySystem/InventorySystem.csproj" />
         <entry key="InventorySystem/Views/InventoryView.axaml" value="InventorySystem/InventorySystem.csproj" />
         <entry key="InventorySystem/Views/MainWindow.axaml" value="InventorySystem/InventorySystem.csproj" />
         <entry key="InventorySystem/Views/TransactionsView.axaml" value="InventorySystem/InventorySystem.csproj" />
