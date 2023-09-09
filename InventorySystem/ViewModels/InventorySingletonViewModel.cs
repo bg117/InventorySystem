@@ -15,7 +15,7 @@ public sealed class InventorySingletonViewModel : IChangeTrackable
 
     [AggregateAllChanges]
     [ChangeTracking]
-    public ObservableCollection<Item> Items { get; set; } = new();
+    public ObservableCollection<Item> Items { get; } = new();
 
     public static InventorySingletonViewModel Instance { get; } = new();
 

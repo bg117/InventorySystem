@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using InventorySystem.Models;
 using JetBrains.Annotations;
@@ -12,7 +15,34 @@ namespace InventorySystem.ViewModels;
 [NotifyPropertyChanged]
 public class InventoryViewModel
 {
+    public InventoryViewModel()
+    {
+        var src = CollectionViewSource.GetDefaultView(InventorySingletonViewModel.Instance.Items);
+        src.Filter = i =>
+        {
+            if (i is not Item item)
+                throw new ArgumentException();
+
+            return item.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+                   item.Description.Contains(Filter, StringComparison.InvariantCultureIgnoreCase);
+        };
+        FilteredItems = src;
+
+        InventorySingletonViewModel.Instance.Items.CollectionChanged += (sender, args) =>
+        {
+            FilteredItems.Refresh();
+        };
+    }
+
     public List<Item> SelectedItems { get; set; }
+
+    public string Filter { get; set; } = string.Empty;
+
+    public ICollectionView FilteredItems
+    {
+        get;
+        private set;
+    }
 
     public bool HasSelected { [UsedImplicitly] get; set; }
 

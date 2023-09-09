@@ -121,7 +121,9 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 
         if (ErrorViewModelInstance.HasError) return;
 
-        InventorySingletonViewModel.Instance.Items = new ObservableCollection<Item>(inventory);
+        InventorySingletonViewModel.Instance.Items.Clear();
+        foreach (var item in inventory)
+            InventorySingletonViewModel.Instance.Items.Add(item);
         InventorySingletonViewModel.Instance.IsChanged = false;
 
         if (IncludeTransactions)
@@ -130,8 +132,9 @@ public sealed class ImportSpreadsheetViewModel : INotifyPropertyChanged
 
             if (ErrorViewModelInstance.HasError) return;
 
-            TransactionsSingletonViewModel.Instance.Transactions =
-                new ObservableCollection<Transaction>(transactions);
+            TransactionsSingletonViewModel.Instance.Transactions.Clear();
+            foreach (var trans in transactions)
+                TransactionsSingletonViewModel.Instance.Transactions.Add(trans);
             TransactionsSingletonViewModel.Instance.IsChanged = false;
         }
 

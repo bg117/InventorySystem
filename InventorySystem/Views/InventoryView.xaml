@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:InventorySystem.ViewModels"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -28,9 +29,10 @@
             <Button Command="{Binding RemoveSelectedCommand}">
                 <iconPacks:PackIconMaterial Kind="TrashCan" />
             </Button>
+            <TextBox MinWidth="300" mah:TextBoxHelper.Watermark="Search by name or ID" Text="{Binding Filter,UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <DataGrid Grid.Row="1" x:Name="InventoryDataGrid"
-                  ItemsSource="{Binding Items,Source={x:Static viewModels:InventorySingletonViewModel.Instance}}"
+                  ItemsSource="{Binding FilteredItems}"
                   CanUserAddRows="False"
                   AutoGenerateColumns="False"
                   SelectionMode="Extended" SelectionChanged="Selector_OnSelectionChanged">

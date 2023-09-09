@@ -15,7 +15,7 @@ public sealed class TransactionsSingletonViewModel : IChangeTrackable
 
     [AggregateAllChanges]
     [ChangeTracking]
-    public ObservableCollection<Transaction> Transactions { get; set; } = new();
+    public ObservableCollection<Transaction> Transactions { get; } = new();
 
     public static TransactionsSingletonViewModel Instance { get; } = new();
 
