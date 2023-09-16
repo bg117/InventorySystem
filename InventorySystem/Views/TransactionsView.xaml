@@ -7,6 +7,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:converters="clr-namespace:InventorySystem.Converters"
              xmlns:models="clr-namespace:InventorySystem.Models"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -27,6 +28,9 @@
                     <Setter Property="Margin" Value="0 0 8 0" />
                     <Setter Property="Padding" Value="8" />
                 </Style>
+                <Style TargetType="Control">
+
+                </Style>
             </StackPanel.Resources>
             <Button Click="AddTransaction_OnClick">
                 <iconPacks:PackIconMaterial Kind="Plus" />
@@ -34,9 +38,12 @@
             <Button Command="{Binding RemoveSelectedCommand}">
                 <iconPacks:PackIconMaterial Kind="TrashCan" />
             </Button>
+            <TextBox MinWidth="300" mah:TextBoxHelper.Watermark="Search by transaction ID" Text="{Binding IdFilter,UpdateSourceTrigger=PropertyChanged}" />
+            <mah:DateTimePicker Margin="8 0" SelectedDateTime="{Binding DateTimeFilter,UpdateSourceTrigger=PropertyChanged}" mah:TextBoxHelper.Watermark="Start date"/>
+
         </StackPanel>
         <DataGrid Grid.Row="1" x:Name="TransactionsListView"
-                  ItemsSource="{Binding Transactions,Source={x:Static viewModels:TransactionsSingletonViewModel.Instance}}"
+                  ItemsSource="{Binding FilteredItems}"
                   SelectionMode="Extended"
                   CanUserAddRows="False"
                   AutoGenerateColumns="False"

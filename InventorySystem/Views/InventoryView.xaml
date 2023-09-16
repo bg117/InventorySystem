@@ -29,7 +29,7 @@
             <Button Command="{Binding RemoveSelectedCommand}">
                 <iconPacks:PackIconMaterial Kind="TrashCan" />
             </Button>
-            <TextBox MinWidth="300" mah:TextBoxHelper.Watermark="Search by name or ID" Text="{Binding Filter,UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox MinWidth="300" mah:TextBoxHelper.Watermark="Search by name, description, or ID" Text="{Binding Filter,UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <DataGrid Grid.Row="1" x:Name="InventoryDataGrid"
                   ItemsSource="{Binding FilteredItems}"

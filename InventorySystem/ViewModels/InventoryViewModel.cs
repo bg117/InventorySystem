@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -17,32 +18,61 @@ public class InventoryViewModel
 {
     public InventoryViewModel()
     {
-        var src = CollectionViewSource.GetDefaultView(InventorySingletonViewModel.Instance.Items);
-        src.Filter = i =>
-        {
-            if (i is not Item item)
-                throw new ArgumentException();
+        var items = InventorySingletonViewModel.Instance.Items;
+        var src = CollectionViewSource.GetDefaultView(items);
 
-            return item.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
-                   item.Description.Contains(Filter, StringComparison.InvariantCultureIgnoreCase);
-        };
+        items.CollectionChanged += ItemsOnCollectionChanged;
+        src.Filter = SrcFilter;
         FilteredItems = src;
+    }
 
-        InventorySingletonViewModel.Instance.Items.CollectionChanged += (sender, args) =>
-        {
-            FilteredItems.Refresh();
-        };
+    private bool SrcFilter(object i)
+    {
+        if (i is not Item item)
+            return false;
+
+        var isInt = int.TryParse(Filter, out var result);
+
+        return item.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+               item.Description.Contains(Filter, StringComparison.InvariantCultureIgnoreCase) ||
+               (isInt && item.Id == result);
+    }
+
+    private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+            foreach (INotifyPropertyChanged item in e.NewItems)
+                item.PropertyChanged += ItemPropertyChanged;
+
+        if (e.OldItems != null)
+            foreach (INotifyPropertyChanged item in e.OldItems)
+                item.PropertyChanged -= ItemPropertyChanged;
+
+        FilteredItems.SafeRefresh();
+    }
+
+    private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (sender is not Item)
+            return;
+
+        FilteredItems.SafeRefresh();
     }
 
     public List<Item> SelectedItems { get; set; }
 
-    public string Filter { get; set; } = string.Empty;
-
-    public ICollectionView FilteredItems
+    private string _filter = string.Empty;
+    public string Filter
     {
-        get;
-        private set;
+        get => _filter;
+        set
+        {
+            _filter = value;
+            FilteredItems.Refresh();
+        }
     }
+
+    public ICollectionView FilteredItems { get; }
 
     public bool HasSelected { [UsedImplicitly] get; set; }
 
@@ -63,7 +93,8 @@ public class InventoryViewModel
     [UsedImplicitly]
     public void ExecuteRemoveSelected()
     {
-        foreach (var item in SelectedItems) InventorySingletonViewModel.Instance.Items.Remove(item);
+        foreach (var item in SelectedItems)
+            InventorySingletonViewModel.Instance.Items.Remove(item);
     }
 
     [UsedImplicitly]

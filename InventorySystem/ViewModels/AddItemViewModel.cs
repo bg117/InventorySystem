@@ -10,7 +10,6 @@ namespace InventorySystem.ViewModels;
 [NotifyPropertyChanged]
 public class AddItemViewModel
 {
-    [Required]
     public string Name { get; set; }
 
     public string Description { get; set; }
@@ -23,8 +22,7 @@ public class AddItemViewModel
     [UsedImplicitly]
     public ICommand AddItemCommand { get; }
 
-    [UsedImplicitly]
-    public bool CanExecuteAddItem => !string.IsNullOrWhiteSpace(Name);
+    [UsedImplicitly] public bool CanExecuteAddItem => !string.IsNullOrWhiteSpace(Name) && Quantity > 0;
 
     [UsedImplicitly]
     public void ExecuteAddItem()
